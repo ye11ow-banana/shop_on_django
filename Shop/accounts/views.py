@@ -100,7 +100,7 @@ def send_link_to_email_view(request):
 
 
 def change_password_view(request):
-	"""Меняет пароль пользователя"""
+	'''Меняет пароль пользователя'''
 # token = default_token_generator.make_token(user)
 	if request.method == 'POST':
 		password = request.POST.get('password').lstrip(' ').rstrip(' ')
