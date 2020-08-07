@@ -12,7 +12,7 @@ def show_product_list_view(request):
 	top_slider_products = products_all.filter(draft=False).order_by('-pub_date')[:5]
 	# featured_products = FeaturedProduct
 
-	return render(request, 'store/index.html',
+	return render(request, 'index.html',
 				{
 					'top_slider_products': top_slider_products,
 					# 'featured_products': featured_products.featured_products,

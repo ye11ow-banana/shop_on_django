@@ -65,7 +65,8 @@ def get_page_or_404(request, is_authenticated_see_page=True) -> None:
 
 def get_all_info_from_form(request) -> list:
 	names_of_field_in_form = [
-		'username_or_email', 'username', 'email', 'password', 'password2'
+		'username_or_email', 'username', 'email', 'password',
+		'password2', 'new_password', 'new_password2'
 	]
 
 	form = []

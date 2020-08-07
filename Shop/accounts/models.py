@@ -14,9 +14,10 @@ class Error(models.Model):
 		'*username shouldn\'t have more than 50 symbols',
 		'*password shouldn\'t have less than 8 symbol',
 		'*password shouldn\'t have more than 50 symbols',
-		'*you\'ve typed different passwords⠀⠀				',
+		'*you\'ve typed different passwords⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀',
 		'*this username is used⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀',
-		'*this email is used⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀'
+		'*this email is used⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀',
+		'*incorrect password⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀'
 	]
 
 	def __str__(self):

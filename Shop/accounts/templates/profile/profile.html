@@ -1,195 +1,165 @@
-<!DOCTYPE html>
-<html lang="en">
-{% load static %}
-<head>
-	<title>Profile</title>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-<!--===============================================================================================-->	
-	<link rel="icon" type="image/png" href="{% static 'store/login/images/icons/favicon.ico' %}"/>
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="{% static 'store/login/vendor/bootstrap/css/bootstrap.min.css' %}">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="{% static 'store/login/fonts/font-awesome-4.7.0/css/font-awesome.min.css' %}">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="{% static 'store/login/fonts/Linearicons-Free-v1.0.0/icon-font.min.css' %}">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="{% static 'store/login/vendor/animate/animate.css' %}">
-<!--===============================================================================================-->	
-	<link rel="stylesheet" type="text/css" href="{% static 'store/login/vendor/css-hamburgers/hamburgers.min.css' %}">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="{% static 'store/login/vendor/animsition/css/animsition.min.css' %}">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="{% static 'store/login/vendor/select2/select2.min.css' %}">
-<!--===============================================================================================-->	
-	<link rel="stylesheet" type="text/css" href="{% static 'store/login/vendor/daterangepicker/daterangepicker.css' %}">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="{% static 'store/login/css/util.css' %}">
-	<link rel="stylesheet" type="text/css" href="{% static 'store/login/css/main.css' %}">
-<!--===============================================================================================-->
-<style type="text/css">
-	.password {
-		font-size: 22px;
-		font-weight: bold;
-		color: #555555;
-		font-family: "Cairo", sans-serif;
-	}
+{% extends "../base.html" %}
 
-	.free_input {
-		font-family: Poppins-Regular;
-		color: #333333;
-		line-height: 1.2;
-		font-size: 18px;
-		display: block;
-		width: 100%;
-		background: transparent;
-		height: 60px;
-		padding: 0 20px;
-	}
+{% block title %}Profile{% endblock %}
 
-	.free_input {
-		font-family: Poppins-Regular;
-		color: #333333;
-		line-height: 1.2;
-		font-size: 18px;
-
-		display: block;
-		width: 100%;
-		background: transparent;
-		height: 60px;
-		padding: 0 20px;
-		}
-		/*------------------------------------------------------------------
-		[ Focus Input ]*/
-
-	.focus-free_input {
-		position: absolute;
-		display: block;
-		width: calc(100% + 2px);
-		height: calc(100% + 2px);
-		top: -1px;
-		left: -1px;
-		pointer-events: none;
-		border: 1px solid #fc00ff;
-		border-radius: 10px;
-
-		visibility: hidden;
-		opacity: 0;
-
-		-webkit-transition: all 0.4s;
-		-o-transition: all 0.4s;
-		-moz-transition: all 0.4s;
-		transition: all 0.4s;
-
-		-webkit-transform: scaleX(1.1) scaleY(1.3);
-		-moz-transform: scaleX(1.1) scaleY(1.3);
-		-ms-transform: scaleX(1.1) scaleY(1.3);
-		-o-transform: scaleX(1.1) scaleY(1.3);
-		transform: scaleX(1.1) scaleY(1.3);
+{% block style %}
+	<style type="text/css">
+		.margin {
+			margin-top: 30px;
+			margin-bottom: -30px;
 		}
 
-	.free_input:focus + .focus-free_input {
-		visibility: visible;
-		opacity: 1;
-
-		-webkit-transform: scale(1);
-		-moz-transform: scale(1);
-		-ms-transform: scale(1);
-		-o-transform: scale(1);
-		transform: scale(1);
+		.password {
+			font-size: 22px;
+			font-weight: bold;
+			color: #555555;
+			font-family: "Cairo", sans-serif;
 		}
 
-</style>
-</head>
-<body>
-	
-	<div class="limiter">
-		<div class="container-login100" style="background-image: url('{% static 'store/login/images/bg-01.jpg' %}');">
-			<div class="wrap-login100 p-l-110 p-r-110 p-t-62 p-b-33">
-				<form class="login100-form validate-form flex-sb flex-w" method="POST">
-					{% csrf_token %}
-					<span class="login100-form-title p-b-53">
-						Profile
-					</span>
+		.free_input {
+			font-family: Poppins-Regular;
+			color: #333333;
+			line-height: 1.2;
+			font-size: 18px;
+			display: block;
+			width: 100%;
+			background: transparent;
+			height: 60px;
+			padding: 0 20px;
+		}
 
-					<div class="p-t-31 p-b-9">
-						<span class="txt1" id="username">
-						{% if error %}
-			                <div id="error" style="color:red;">{{ error }}</div>
-			            {% endif %}
-						</span>
-					</div>
+		.free_input {
+			font-family: Poppins-Regular;
+			color: #333333;
+			line-height: 1.2;
+			font-size: 18px;
 
-					<div class="p-t-31 p-b-9">
-						<span class="txt1">
-							Username
-						</span>
-					</div>
-					<div class="wrap-input100 validate-input" data-validate = "Username is required">
-						<input class="input100" type="text" name="username" value="{{ user.username }}">
-						<span class="focus-input100"></span>
-					</div>
+			display: block;
+			width: 100%;
+			background: transparent;
+			height: 60px;
+			padding: 0 20px;
+			}
 
-					<div class="p-t-31 p-b-9">
-						<span class="txt1">
-							Email
-						</span>
-					</div>
-					<div class="wrap-input100 validate-input" data-validate = "Email is required">
-						<input class="input100" type="text" name="email" value="{{ user.email }}">
-						<span class="focus-input100"></span>
-					</div>
-					
-					<div class="p-t-13 p-b-9">
-						<span class="txt1">
-							<a href="{% url '1_step-type_email' %}" class="password">Change your password</a>
-						</span>
-					</div>
+		.focus-free_input {
+			position: absolute;
+			display: block;
+			width: calc(100% + 2px);
+			height: calc(100% + 2px);
+			top: -1px;
+			left: -1px;
+			pointer-events: none;
+			border: 1px solid #fc00ff;
+			border-radius: 10px;
 
+			visibility: hidden;
+			opacity: 0;
 
-					<div class="container-login100-form-btn m-t-17">
-						<button class="login100-form-btn">
-							Confirm changes
-						</button>
-					</div>
+			-webkit-transition: all 0.4s;
+			-o-transition: all 0.4s;
+			-moz-transition: all 0.4s;
+			transition: all 0.4s;
 
-					<div class="w-full text-center p-t-55">
-						<span class="txt2">
-							Do you want to go?
-						</span>
+			-webkit-transform: scaleX(1.1) scaleY(1.3);
+			-moz-transform: scaleX(1.1) scaleY(1.3);
+			-ms-transform: scaleX(1.1) scaleY(1.3);
+			-o-transform: scaleX(1.1) scaleY(1.3);
+			transform: scaleX(1.1) scaleY(1.3);
+			}
 
-						<a href="{% url 'logout' %}" class="txt2 bo1">
-							Log out
-						</a>
-						<p>
-							<a href="{% url 'product_list' %}" class="txt2 bo1">
-								Come back to shop
-							</a>				
-						</p>
-					</div>
-				</form>
-			</div>
-		</div>
+		.free_input:focus + .focus-free_input {
+			visibility: visible;
+			opacity: 1;
+
+			-webkit-transform: scale(1);
+			-moz-transform: scale(1);
+			-ms-transform: scale(1);
+			-o-transform: scale(1);
+			transform: scale(1);
+			}
+
+	</style>
+{% endblock style %}
+
+{% block content %}
+	<span class="login100-form-title p-b-53">
+		<h1>Profile</h1>
+		<p class="margin">Here you can change 
+		info about yourself</p>
+	</span>
+
+	<div class="p-t-31 p-b-9">
+		<span class="txt1" id="username">
+		{% if error %}
+			<div id="error" style="color:red;">{{ error }}</div>
+		{% endif %}
+		</span>
+	</div>
+
+	<div class="p-t-31 p-b-9">
+		<span class="txt1">
+			Username
+		</span>
+	</div>
+	<div class="wrap-input100 validate-input" data-validate = "Username is required">
+		<input class="input100" type="text" name="username" value="{{ user.username }}">
+		<span class="focus-input100"></span>
+	</div>
+
+	<div class="p-t-31 p-b-9">
+		<span class="txt1">
+			Email
+		</span>
+	</div>
+	<div class="wrap-input100 validate-input" data-validate = "Email is required">
+		<input class="input100" type="text" name="email" value="{{ user.email }}">
+		<span class="focus-input100"></span>
+	</div>
+
+	<div class="p-t-13 p-b-9">
+		<span class="txt1" id="password">
+			Old password
+		</span>
+	</div>
+	<div class="wrap-input100" data-validate = "Password is required">
+		<input class="input100" type="password" name="password" >
+		<span class="focus-input100"></span>
 	</div>
 	
+	<div class="p-t-13 p-b-9">
+		<span class="txt1" id="password">
+			New password
+		</span>
+	</div>
+	<div class="wrap-input100" data-validate = "Password is required">
+		<input class="input100" type="password" name="new_password" >
+		<span class="focus-input100"></span>
+	</div>
 
-	<div id="dropDownSelect1"></div>
-	
-<!--===============================================================================================-->
-	<script src="{% static 'store/login/vendor/jquery/jquery-3.2.1.min.js' %}"></script>
-<!--===============================================================================================-->
-	<script src="{% static 'store/login/vendor/animsition/js/animsition.min.js' %}"></script>
-<!--===============================================================================================-->
-	<script src="{% static 'store/login/vendor/bootstrap/js/popper.js' %}"></script>
-	<script src="{% static 'store/login/vendor/bootstrap/js/bootstrap.min.js' %}"></script>
-<!--===============================================================================================-->
-	<script src="{% static 'store/login/vendor/select2/select2.min.js' %}"></script>
-<!--===============================================================================================-->
-	<script src="{% static 'store/login/vendor/daterangepicker/moment.min.js' %}"></script>
-	<script src="{% static 'store/login/vendor/daterangepicker/daterangepicker.js' %}"></script>
-<!--===============================================================================================-->
-	<script src="{% static 'store/login/vendor/countdowntime/countdowntime.js' %}"></script>
-<!--===============================================================================================-->
-	<script src="{% static 'store/login/js/main.js' %}"></script>
-</body>
-</html>
+	<div class="p-t-13 p-b-9">
+		<span class="txt1" id="password2">
+			Repeat new password
+		</span>
+	</div>
+	<div class="wrap-input100" data-validate = "Password is required">
+		<input class="input100" type="password" name="new_password2" >
+		<span class="focus-input100"></span>
+	</div>
+{% endblock content %}
+
+{% block button %} Confirm changes {% endblock button %}
+
+{% block footer %}
+	<span class="txt2">
+		Do you want to go?
+	</span>
+
+	<a href="{% url 'logout' %}" class="txt2 bo1">
+		Log out
+	</a>
+	<p>
+		<a href="{% url 'product_list' %}" class="txt2 bo1">
+			Come back to shop
+		</a>				
+	</p>
+{% endblock footer %}

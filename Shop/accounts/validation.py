@@ -51,8 +51,8 @@ class CheckValid:
 
 	def is_obj_in_data(self, obj:str):
 		'''
-		Проверяет объект на существование в бд. 
-		Предназначено для почты или логина'''
+		Проверяет почту или логин на существование в бд. 
+		Предназначено для регистрации'''
 		try:
 			User.objects.get(username=obj)
 			return '7'
@@ -62,5 +62,28 @@ class CheckValid:
 				return '8'
 			except: return None
 
+	def is_obj_in_data_for_profile(self, obj: str, user_to_change):
+		'''
+		Проверяет почту или логин на существование в бд. 
+		Предназначено для профиля'''
+		try:
+			user = User.objects.get(username=obj)
+			if user != user_to_change:
+				return '7'
+		except Exception as e:
+			try:
+				user = User.objects.get(email=obj)
+				if user != user_to_change:
+					return '8'
+			except: return None	
 
+	def check_passwords_right(self, password: str, new_password: str, 
+		new_password2: str, user_to_change):
+		if new_password and new_password2:
 
+			if user_to_change.check_password(password):
+				if not self.check_password_valid(new_password, new_password2):
+					return None
+				else:
+					return self.check_password_valid(new_password, new_password2)
+			return '9'

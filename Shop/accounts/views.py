@@ -1,8 +1,9 @@
-from django.contrib.auth import authenticate, login, logout  
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import update_session_auth_hash
 from django.urls import reverse
 from django.shortcuts import render, redirect 
 
-from .forms import RegistrationForm
+from .forms import RegistrationForm, ProfileForm
 from . import services
 
 
@@ -11,24 +12,16 @@ def register_view(request):
 	services.get_page_or_404(request, False)
 	if request.method == 'POST':
 		username, email, password, password2 = services.get_all_info_from_form(request)
-		# username = request.POST.get('username').lstrip(' ').rstrip(' ')
-		# email = request.POST.get('email').lstrip(' ').rstrip(' ')
-		# password = request.POST.get('password').lstrip(' ').rstrip(' ')
-		# password2 = request.POST.get('password2').lstrip(' ').rstrip(' ')
 
 		if RegistrationForm().is_valid(username, email, password, password2):	
 			user = services.create_new_user(username, email, password)	
 			services.send_to_mail_generated_code(email, user)
 			return redirect(reverse('activation_acc'))
 
-		try:
-			error_message = services.error[0].error
-			services.error.delete()
-			return render(request, 'registration/registration_form.html', 
-				{'error': error_message})
-		except:
-			return render(request, 'registration/registration_form.html', 
-				{'error': False})
+		error_message = services.error[0].error
+		services.error.delete()
+		return render(request, 'registration/registration_form.html', 
+			{'error': error_message})
 
 	return render(request, 'registration/registration_form.html')
 
@@ -77,63 +70,39 @@ def login_view(request):
 			{'error': '*you have to confirm your email⠀to login⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ '})			
 
 	return render(request, 'login/login.html')
-    
-
-
-
-
 
 
 def logout_view(request):
 	'''Выводит пользователя из учетной записи'''
 	services.get_page_or_404(request, True)
 	logout(request) 
-	return redirect('/')
-
-def send_link_to_email_view(request):
-	"""Отправляет на почту ссылку на сброс пароля"""
-	if request.method == 'POST':
-		services.username_or_email(request)
+	return redirect(reverse('product_list'))
 
 
-	return render(request, 'accounts/1_step-type_email.html', context)
-
-
-def change_password_view(request):
-	'''Меняет пароль пользователя'''
-# token = default_token_generator.make_token(user)
-	if request.method == 'POST':
-		password = request.POST.get('password').lstrip(' ').rstrip(' ')
-		password2 = request.POST.get('password2').lstrip(' ').rstrip(' ') 
-		if services.is_password_valid(password, password2):
-			u = User.objects.get(email=email) 
-			u.set_password(password)
-			u.save()                 
-			return redirect(reverse('login'))
-
-	return render(request, 'accounts/2_step-type_new_password', context)
-
-
-def change_info_of_user_view(request):
-	"""Меняет информацию пользователя: его имя, пароль, почту и т. д."""
+def profile_view(request):
+	'''Меняет информацию пользователя: его имя, пароль, почту и т. д.'''
+	services.get_page_or_404(request, True)
 	if request.method == 'POST':
 		user_to_change = request.user
-		username = request.POST.get('username').lstrip(' ').rstrip(' ')
-		email = request.POST.get('email').lstrip(' ').rstrip(' ')
 
-		if  check_valid.is_username_valid(username) and \
-			check_valid.is_email_valid(email):
+		form = services.get_all_info_from_form(request)
+		username, email, password, new_password, new_password2 = form
 
-			# context['error'] = '*account with this email does not exist' 
+		if ProfileForm().is_valid(username, email, password, 
+			new_password, new_password2, user_to_change):				
+
+			user_to_change.set_password(new_password)
+			update_session_auth_hash(request, user_to_change)
 			user_to_change.username = username
 			user_to_change.email = email
 			user_to_change.save()
-
+			
 			return redirect(reverse('product_list'))
 
-	else:
-		services.get_page_or_404(request, True)
 
-		return render(request, 'accounts/profile.html', {'user': request.user})
+		error_message = services.error[0].error
+		services.error.delete()
+		return render(request, 'profile/profile.html', {
+			'error': error_message})
 
-	return render(request, 'accounts/profile.html', context)        
+	return render(request, 'profile/profile.html', {'user': request.user})
