@@ -25,7 +25,7 @@ class CheckValid:
 					return '1' 
 
 	def check_username_valid(self, username:str):
-		"""Проверяет логин на валидность"""
+		'''Проверяет логин на валидность'''
 		if len(username) < 4:
 			return '2' 
 		elif len(username) > 50:
@@ -35,13 +35,13 @@ class CheckValid:
 				return self.check_unacceptable_symbols(username, 'username')
 
 	def check_email_valid(self, email:str):
-		"""Проверяет почту на валидность"""
+		'''Проверяет почту на валидность'''
 		if '@' in email:
 			if self.check_unacceptable_symbols(email, 'email'):
 				return self.check_unacceptable_symbols(email, 'email')
 
 	def check_password_valid(self, password:str, password2:str):
-		"""Проверяет пароль на валидность"""
+		'''Проверяет пароль на валидность'''
 		if len(password) < 8:
 			return '5' 
 		elif len(password) > 50:
@@ -79,6 +79,7 @@ class CheckValid:
 
 	def check_passwords_right(self, password: str, new_password: str, 
 		new_password2: str, user_to_change):
+		'''Проверяет, можно ли изменить пароль данному пользователю'''
 		if new_password and new_password2:
 
 			if user_to_change.check_password(password):

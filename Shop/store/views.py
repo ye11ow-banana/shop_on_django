@@ -42,6 +42,4 @@ def show_shoping_cart(request):
 
 def show_shop_grid(request):
 	"""Рендерит страницу с товарами"""
-	return render(request, 'store/shop-grid.html')
-
-     
+	return render(request, 'store/shop-grid.html')  

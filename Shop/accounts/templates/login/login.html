@@ -2,19 +2,27 @@
 {% load static %}
 
 {% block title %}Login{% endblock %}
-	
+
+{% block style %}
+	<style>
+		#btn_google {
+			width: 455px
+		}
+	</style>
+{% endblock %}
+
 {% block content %}
 	{{ form.as_p }}
 	<span class="login100-form-title p-b-53">
 		Sign In With
 	</span>
+<!-- 
+	<a href="{% url 'social:begin' 'instagram' %}" class="btn-face m-b-20">
+		<img src="https://img.icons8.com/windows/48/000000/instagram-new.png"/>
+		Instagram
+	</a> -->
 
-	<a href="" class="btn-face m-b-20">
-		<i class="fa fa-facebook-official"></i>
-		Facebook
-	</a>
-
-	<a href="" class="btn-google m-b-20">
+	<a href="{% url 'social:begin' 'google-oauth2' %}" class="btn-google m-b-20" id="btn_google">
 		<img src="{% static 'images/icons/icon-google.png' %}">
 		Google
 	</a>
@@ -63,7 +71,7 @@
 		Sign up now. 
 	</a>
 	<p>
-		<a href="" class="txt2 bo1">
+		<a href="{% url 'product_list' %}" class="txt2 bo1">
 			Come back to shop
 		</a>				
 	</p>
