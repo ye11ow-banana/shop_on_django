@@ -5,6 +5,7 @@ from django.core.mail import send_mail
 from .models import Error
 from .models import Code
 from django.http import Http404
+import webbrowser
 
 
 error = Error.objects.all().filter(error_id=1)
@@ -28,7 +29,8 @@ def get_user_from_code(code: str):
 
 
 def check_code(code: str) -> bool:
-	'''Проверяем код, введеный юзером, с кодом, отправленным на почту'''
+	'''Проверяем код, введеный юзером, 
+	с кодом, отправленным на почту'''
 	try:
 		Code.objects.get(code=code)
 		return True
@@ -45,6 +47,7 @@ def get_username_from_email(email: str) -> str:
 
 
 def create_new_user(username: str, email: str, password: str):
+	'''Создает нового пользователя в бд'''
 	user = User.objects.create_user(username, email, password)
 	user.is_active = False
 	user.save()
@@ -64,6 +67,7 @@ def get_page_or_404(request, is_authenticated_see_page=True) -> None:
 
 
 def get_all_info_from_form(request) -> list:
+	'''Возвращает все поля из формы'''
 	names_of_field_in_form = [
 		'username_or_email', 'username', 'email', 'password',
 		'password2', 'new_password', 'new_password2'
@@ -82,6 +86,8 @@ def get_all_info_from_form(request) -> list:
 
 
 def get_user_from_username_or_email(username_or_email: str):
+	'''Возвращет объект пользователя из бд 
+	по полю почты или ника'''
 	try:
 		return User.objects.get(
 			username=get_username_from_email(username_or_email)
@@ -89,9 +95,17 @@ def get_user_from_username_or_email(username_or_email: str):
 	except: pass
 	
 
-# def get_email_from_username(username_or_email:str) -> str:    
-# 	try:
-# 		user = User.objects.get(username=username_or_email)
-# 		return user.email
-# 	except:
-# 		return username_or_email
+def open_tab_with_site_of_mail_of_user(email_of_user: str) -> None:
+	'''Открывает сайт почты пользователя'''
+	emails = [
+		'mail.ru/', 'inbox.ru/', 'list.ru/', 'bk.ru/',
+		'i.ua/', 'ukr.net/', 'gmail.com/', 'yandex.ru/', 
+		'yandex.ua/', 'ya.ru/', 'yandex.com/'
+	]
+
+	email_of_user = email_of_user[(email_of_user.index('@') + 1):] + '/'
+
+	for email in emails:
+		if email == email_of_user:
+			webbrowser.open('https://' + email, new=1)
+			return None

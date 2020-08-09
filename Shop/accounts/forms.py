@@ -49,4 +49,3 @@ class RegistrationForm(ProfileForm):
 		]
 
 		return create_error_if_form_isnt_valid(cheaking_functions)
-

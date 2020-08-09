@@ -34,5 +34,3 @@ class Code(models.Model):
 
 	def get_user(self):
 		return self.user
-
-# '*you entered a non-existent email⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀'

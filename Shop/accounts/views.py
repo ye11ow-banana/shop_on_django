@@ -2,7 +2,6 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth import update_session_auth_hash
 from django.urls import reverse
 from django.shortcuts import render, redirect 
-
 from .forms import RegistrationForm, ProfileForm
 from . import services
 
@@ -16,6 +15,7 @@ def register_view(request):
 		if RegistrationForm().is_valid(username, email, password, password2):	
 			user = services.create_new_user(username, email, password)	
 			services.send_to_mail_generated_code(email, user)
+			services.open_tab_with_site_of_mail_of_user(email)
 			return redirect(reverse('activation_acc'))
 
 		error_message = services.error[0].error
