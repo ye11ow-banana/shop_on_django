@@ -34,12 +34,3 @@
 
 
 # 	featured_products = get_random(list_featured_products)
-
-
-# class WishList:
-# 	products = list(products_all.filter(draft=False))
-# 	wish_list = []	
-
-# 	for product in products:
-# 		if product.wishes == True:
-# 			wish_list.append(product)	

@@ -76,7 +76,7 @@ def logout_view(request):
 	'''Выводит пользователя из учетной записи'''
 	services.get_page_or_404(request, True)
 	logout(request) 
-	return redirect(reverse('product_list'))
+	return redirect(reverse('main_page'))
 
 
 def profile_view(request):
@@ -97,7 +97,7 @@ def profile_view(request):
 			user_to_change.email = email
 			user_to_change.save()
 			
-			return redirect(reverse('product_list'))
+			return redirect(reverse('main_page'))
 
 
 		error_message = services.error[0].error
