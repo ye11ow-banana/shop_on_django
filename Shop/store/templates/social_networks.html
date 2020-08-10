@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Social networks{% endblock %}
+
+{% block style %}
+    <style type="text/css">
+        .social {
+            margin: 20px;
+            text-align: center;
+        }
+        .sorry {
+            width: 1150px;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <h3 class="social">Sorry but we have not social networks accounts yet</h3>
+    <img class="sorry" src="{% static 'img/sorry.jpeg' %}">
+{% endblock %}
