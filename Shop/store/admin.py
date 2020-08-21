@@ -1,10 +1,11 @@
 from django.contrib import admin
-from .models import Department, Color, Product, Gallery, Reviews, News, Advert, Coupon
+from .models import Department, Color, Product, Gallery, Reviews, News, Advert, Coupon, Wish
 from django.utils.safestring import mark_safe
+from modeltranslation.admin import TranslationAdmin
 
 
 @admin.register(Department)
-class DepartmentAdmin(admin.ModelAdmin):
+class DepartmentAdmin(TranslationAdmin):
     """Категории"""
     list_display = ("id", "name")
     list_display_links = ("name",)
@@ -29,7 +30,7 @@ class GalleryInline(admin.TabularInline):
 
 
 @admin.register(Product)
-class ProductAdmin(admin.ModelAdmin):
+class ProductAdmin(TranslationAdmin):
     """Фильмы"""
     list_display = ("name", "quantity", "price", "get_image", "draft")
     list_filter = ("department",)
@@ -71,14 +72,14 @@ class ProductAdmin(admin.ModelAdmin):
 
 
 @admin.register(Reviews)
-class ReviewAdmin(admin.ModelAdmin):
+class ReviewsAdmin(TranslationAdmin):
     """Отзывы"""
     list_display = ("name", "email", "parent", "product", "id")
     readonly_fields = ("name", "email")
 
 
 @admin.register(Coupon)
-class CouponAdmin(admin.ModelAdmin):
+class CouponAdmin(TranslationAdmin):
     """Отзывы"""
     list_display = ("name", "sale", "id")
     readonly_fields = ("name", "sale")
@@ -91,18 +92,19 @@ class NewsAdmin(admin.ModelAdmin):
 
 
 @admin.register(Advert)
-class AdvertAdmin(admin.ModelAdmin):
+class AdvertAdmin(TranslationAdmin):
     """Отзывы"""
     list_display = ("title", "text", "id")
-    readonly_fields = ("title", "text")
+
+
+@admin.register(Wish)
+class WishAdmin(admin.ModelAdmin):
+    """Отзывы"""
+    list_display = ("ip", "id")
+    readonly_fields = ("ip", "item")
 
 
 admin.site.register(Color)
 
 admin.site.site_title = 'Store'
 admin.site.site_header = 'Store'
-
-
-
-
-    

@@ -99,9 +99,9 @@ def profile_view(request):
 			
 			return redirect(reverse('main_page'))
 
-
 		error_message = services.error[0].error
 		services.error.delete()
+		
 		return render(request, 'profile/profile.html', {
 			'error': error_message})
 

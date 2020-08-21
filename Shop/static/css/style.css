@@ -332,19 +332,8 @@ ol {
 
 .header__top__right__language:hover ul {
 	top: 23px;
-	opacity: 1;
+	opacity: 0;
 	visibility: visible;
-}
-
-.header__top__right__language:after {
-	position: absolute;
-	right: -21px;
-	top: 1px;
-	height: 20px;
-	width: 1px;
-	background: #000000;
-	opacity: 0.1;
-	content: "";
 }
 
 .header__top__right__language img {
@@ -3465,4 +3454,60 @@ ol {
 	.blog__details__hero__text h2 {
 		font-size: 24px;
 	}
+}
+
+
+/* Container needed to position the button. Adjust the width as needed */
+.banner__pic {
+	position: relative;
+	width: 100%;
+}
+
+/* Make the image responsive */
+.banner__pic img {
+	width: 100%;
+	height: auto;
+}
+
+/* Style the button and place it in the middle of the container/image */
+.banner__pic .not_real_btn_1 {
+	position: absolute;
+	top: 55%;
+	left: 58%;
+	background-color: #B32626;
+	color: white;
+	font-size: 16px;
+	padding: 12px 24px;
+	border: none;
+	cursor: pointer;
+	border-radius: 5px;
+	font-weight: bold;
+	transition: all, 0.5s;
+}
+
+.banner__pic .not_real_btn_2 {
+	position: absolute;
+	top: 55%;
+	left: 46%;
+	background-color: #B32626;
+	color: white;
+	font-size: 16px;
+	padding: 12px 24px;
+	border: none;
+	cursor: pointer;
+	border-radius: 5px;
+	font-weight: bold;
+	transition: all, 0.5s;
+}
+
+.banner__pic .not_real_btn_1:hover {
+	background-color: green;
+}
+
+.banner__pic .not_real_btn_2:hover {
+	background-color: green;
+}
+
+a {
+	cursor: pointer;
 }
