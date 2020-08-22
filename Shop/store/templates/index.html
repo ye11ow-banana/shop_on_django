@@ -45,7 +45,8 @@
                             <i class="fa fa-bars"></i>
                             <span>{% trans 'Департаменты' %}</span>
                         </div>
-                        <ul>{% for department in departments %}
+                        <ul>
+                            {% for department in departments %}
                             <li><a href="{% url 'shop_grid' %}/{{ department.url }}/">{{ department.name }}</a></li>
                             {% endfor %}
                         </ul>
@@ -151,7 +152,7 @@
                             </ul>
                         </div>
                         <div class="featured__item__text">
-                            <h6><a href="#">{{ product.name }}</a></h6>
+                            <h6><a href="{{ product.get_absolute_url }}">{{ product.name }}</a></h6>
                             <h5>${{ product.price }}</h5>
                         </div>
                     </div>

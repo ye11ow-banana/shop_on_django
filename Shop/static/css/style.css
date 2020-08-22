@@ -975,23 +975,26 @@ ol {
 
 .latest-product__item {
 	margin-bottom: 20px;
-	overflow: hidden;
-	display: block;
+}
+
+.latest-prdouct__slider__item a {
+	display: inline-block;	
 }
 
 .latest-product__item__pic {
 	float: left;
-	margin-right: 26px;
+	margin: 7px 7px 7px 0px;
+	margin-left: 20px;
+	width: 150px;
 }
 
 .latest-product__item__pic img {
 	height: 110px;
-	width: 110;
 }
 
 .latest-product__item__text {
-	overflow: hidden;
-	padding-top: 10px;
+	float: right;
+	margin: 7px 7px 7px 7px;
 }
 
 .latest-product__item__text h6 {
@@ -3510,4 +3513,56 @@ ol {
 
 a {
 	cursor: pointer;
+}
+
+.add_review_form {
+	width: 50%;
+	display: inline-block;
+	margin-left: 50%;
+}
+
+.add_review_form textarea {
+	width: 100%;
+	height: 70px;
+	border-radius: 10px;
+	border: 0px;
+	font-size: 20px;
+	padding: 10px;
+	background-color: #7fad39;
+	color: #FFFFFF;
+
+}
+
+.add_review_form textarea::-webkit-input-placeholder { 
+	color: #FFFFFF; 
+}
+
+.add_review_form button {
+	width: 100%;
+	height: 50px;
+	border-radius: 10px;
+	border: 0px;
+	transition: all 0.2s;
+	background-color: #7fad39;
+	color: #FFFFFF;
+}
+
+.add_review_form button:hover {
+	background-color: #327C39;	
+}
+
+.add_review_first {
+	font-size: 40px;
+	text-align: center;
+	margin: 50px;
+	color: black;
+}
+
+.review {
+	text-align: center;
+	margin: 50px;
+	color: black;
+	border-radius: 10px;
+	border: 0px;
+	background-color: #7fad39;
 }

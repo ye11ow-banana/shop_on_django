@@ -35,20 +35,12 @@
                     <div class="hero__categories">
                         <div class="hero__categories__all">
                             <i class="fa fa-bars"></i>
-                            <span>All departments</span>
+                            <span>{% trans 'Департаменты' %}</span>
                         </div>
                         <ul>
-                            <li><a href="#">Fresh Meat</a></li>
-                            <li><a href="#">Vegetables</a></li>
-                            <li><a href="#">Fruit & Nut Gifts</a></li>
-                            <li><a href="#">Fresh Berries</a></li>
-                            <li><a href="#">Ocean Foods</a></li>
-                            <li><a href="#">Butter & Eggs</a></li>
-                            <li><a href="#">Fastfood</a></li>
-                            <li><a href="#">Fresh Onion</a></li>
-                            <li><a href="#">Papayaya & Crisps</a></li>
-                            <li><a href="#">Oatmeal</a></li>
-                            <li><a href="#">Fresh Bananas</a></li>
+                            {% for department in departments %}
+                            <li><a href="{% url 'shop_grid' %}/{{ department.url }}/">{{ department.name }}</a></li>
+                            {% endfor %}
                         </ul>
                     </div>
                 </div>
@@ -77,7 +69,7 @@
     <!-- Hero Section End -->
 
     <!-- Breadcrumb Section Begin -->
-    <section class="breadcrumb-section set-bg" data-setbg="img/breadcrumb.jpg">
+    <section class="breadcrumb-section set-bg" data-setbg="{% static 'img/breadcrumb.jpg' %}">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12 text-center">
@@ -101,25 +93,20 @@
                 <div class="col-lg-3 col-md-5">
                     <div class="sidebar">
                         <div class="sidebar__item">
-                            <h4>Department</h4>
+                            <h4>{% trans 'Департамент' %}</h4>
                             <ul>
-                                <li><a href="#">Fresh Meat</a></li>
-                                <li><a href="#">Vegetables</a></li>
-                                <li><a href="#">Fruit & Nut Gifts</a></li>
-                                <li><a href="#">Fresh Berries</a></li>
-                                <li><a href="#">Ocean Foods</a></li>
-                                <li><a href="#">Butter & Eggs</a></li>
-                                <li><a href="#">Fastfood</a></li>
-                                <li><a href="#">Fresh Onion</a></li>
-                                <li><a href="#">Papayaya & Crisps</a></li>
-                                <li><a href="#">Oatmeal</a></li>
+                                {% for department in departments %}
+                                <li><a href="{% url 'shop_grid' %}/{{ department.url }}/">{{ department.name }}</a></li>
+                                {% endfor %}
                             </ul>
                         </div>
                         <div class="sidebar__item">
                             <h4>{% trans 'Цена' %}</h4>
                             <div class="price-range-wrap">
+
                                 <div class="price-range ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content"
-                                    data-min="10" data-max="540">
+                                    data-min="{{ the_cheapest_price }}" data-max="{{ most_expensive_price }}">
+
                                     <div class="ui-slider-range ui-corner-all ui-widget-header"></div>
                                     <span tabindex="0" class="ui-slider-handle ui-corner-all ui-state-default"></span>
                                     <span tabindex="0" class="ui-slider-handle ui-corner-all ui-state-default"></span>
@@ -134,131 +121,45 @@
                         </div>
                         <div class="sidebar__item sidebar__item__color--option">
                             <h4>{% trans 'Цвет' %}</h4>
-                            <div class="sidebar__item__color sidebar__item__color--white">
-                                <label for="white">
-                                    {% trans 'Белый' %}
-                                    <input type="radio" id="white">
+                            {% for color in colors %}
+                            <div class="sidebar__item__color sidebar__item__color--{{ color.class_for_css }}">
+                                <label for="{{ color.class_for_css }}">
+                                    {{ color.name }}
+                                    <input type="radio" id="{{ color.class_for_css }}">
                                 </label>
                             </div>
-                            <div class="sidebar__item__color sidebar__item__color--gray">
-                                <label for="gray">
-                                    {% trans 'Серый' %}
-                                    <input type="radio" id="gray">
-                                </label>
-                            </div>
-                            <div class="sidebar__item__color sidebar__item__color--red">
-                                <label for="red">
-                                    {% trans 'Красный' %}
-                                    <input type="radio" id="red">
-                                </label>
-                            </div>
-                            <div class="sidebar__item__color sidebar__item__color--black">
-                                <label for="black">
-                                    {% trans 'Черный' %}
-                                    <input type="radio" id="black">
-                                </label>
-                            </div>
-                            <div class="sidebar__item__color sidebar__item__color--blue">
-                                <label for="blue">
-                                    {% trans 'Синий' %}
-                                    <input type="radio" id="blue">
-                                </label>
-                            </div>
-                            <div class="sidebar__item__color sidebar__item__color--green">
-                                <label for="green">
-                                    {% trans 'Зеленый' %}
-                                    <input type="radio" id="green">
-                                </label>
-                            </div>
-                        </div>
-                        <div class="sidebar__item">
-                            <h4>{% trans 'Популярный размер' %}</h4>
-                            <div class="sidebar__item__size">
-                                <label for="large">
-                                    {% trans 'Большой' %}
-                                    <input type="radio" id="large">
-                                </label>
-                            </div>
-                            <div class="sidebar__item__size">
-                                <label for="medium">
-                                    {% trans 'Средний' %}
-                                    <input type="radio" id="medium">
-                                </label>
-                            </div>
-                            <div class="sidebar__item__size">
-                                <label for="small">
-                                    {% trans 'Маленький' %}
-                                    <input type="radio" id="small">
-                                </label>
-                            </div>
-                            <div class="sidebar__item__size">
-                                <label for="tiny">
-                                    {% trans 'Крохатный' %}
-                                    <input type="radio" id="tiny">
-                                </label>
-                            </div>
+                            {% endfor %}
                         </div>
                         <div class="sidebar__item">
                             <div class="latest-product__text">
                                 <h4>{% trans 'Новинки' %}</h4>
                                 <div class="latest-product__slider owl-carousel">
                                     <div class="latest-prdouct__slider__item">
-                                        <a href="#" class="latest-product__item">
+                                        {% for product in products|slice:":3" %}
+                                        <a href="{{ product.get_absolute_url }}" class="latest-product__item">
                                             <div class="latest-product__item__pic">
-                                                <img src="img/latest-product/lp-1.jpg" alt="">
+                                                <img src="{{ product.img.url }}" alt="">
                                             </div>
                                             <div class="latest-product__item__text">
-                                                <h6>Crab Pool Security</h6>
-                                                <span>$30.00</span>
+                                                <h6>{{ product.name }}</h6>
+                                                <span>${{ product.price }}</span>
                                             </div>
                                         </a>
-                                        <a href="#" class="latest-product__item">
-                                            <div class="latest-product__item__pic">
-                                                <img src="img/latest-product/lp-2.jpg" alt="">
-                                            </div>
-                                            <div class="latest-product__item__text">
-                                                <h6>Crab Pool Security</h6>
-                                                <span>$30.00</span>
-                                            </div>
-                                        </a>
-                                        <a href="#" class="latest-product__item">
-                                            <div class="latest-product__item__pic">
-                                                <img src="img/latest-product/lp-3.jpg" alt="">
-                                            </div>
-                                            <div class="latest-product__item__text">
-                                                <h6>Crab Pool Security</h6>
-                                                <span>$30.00</span>
-                                            </div>
-                                        </a>
+                                        {% endfor %}
                                     </div>
                                     <div class="latest-prdouct__slider__item">
-                                        <a href="#" class="latest-product__item">
+                                        {% for product in products|slice:"3:6" %}
+                                        <a href="{{ product.get_absolute_url }}" class="latest-product__item">
                                             <div class="latest-product__item__pic">
-                                                <img src="img/latest-product/lp-1.jpg" alt="">
+                                                <img src="{{ product.img.url }}" alt="">
+                                                
                                             </div>
-                                            <div class="latest-product__item__text">
-                                                <h6>Crab Pool Security</h6>
-                                                <span>$30.00</span>
+                                            <div class="latest-product__item__text" alt="">
+                                                <h6>{{ product.name }}</h6>
+                                                <span>${{ product.price }}</span>
                                             </div>
                                         </a>
-                                        <a href="#" class="latest-product__item">
-                                            <div class="latest-product__item__pic">
-                                                <img src="img/latest-product/lp-2.jpg" alt="">
-                                            </div>
-                                            <div class="latest-product__item__text">
-                                                <h6>Crab Pool Security</h6>
-                                                <span>$30.00</span>
-                                            </div>
-                                        </a>
-                                        <a href="#" class="latest-product__item">
-                                            <div class="latest-product__item__pic">
-                                                <img src="img/latest-product/lp-3.jpg" alt="">
-                                            </div>
-                                            <div class="latest-product__item__text">
-                                                <h6>Crab Pool Security</h6>
-                                                <span>$30.00</span>
-                                            </div>
-                                        </a>
+                                        {% endfor %}
                                     </div>
                                 </div>
                             </div>
@@ -272,122 +173,53 @@
                         </div>
                         <div class="row">
                             <div class="product__discount__slider owl-carousel">
-                                <div class="col-lg-4">
-                                    <div class="product__discount__item">
-                                        <div class="product__discount__item__pic set-bg"
-                                            data-setbg="img/product/discount/pd-1.jpg">
-                                            <div class="product__discount__percent">-20%</div>
-                                            <ul class="product__item__pic__hover">
-                                                <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                                <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                                                <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                                            </ul>
-                                        </div>
-                                        <div class="product__discount__item__text">
-                                            <span>Dried Fruit</span>
-                                            <h5><a href="#">Raisin’n’nuts</a></h5>
-                                            <div class="product__item__price">$30.00 <span>$36.00</span></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4">
-                                    <div class="product__discount__item">
-                                        <div class="product__discount__item__pic set-bg"
-                                            data-setbg="img/product/discount/pd-2.jpg">
-                                            <div class="product__discount__percent">-20%</div>
-                                            <ul class="product__item__pic__hover">
-                                                <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                                <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                                                <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                                            </ul>
-                                        </div>
-                                        <div class="product__discount__item__text">
-                                            <span>Vegetables</span>
-                                            <h5><a href="#">Vegetables’package</a></h5>
-                                            <div class="product__item__price">$30.00 <span>$36.00</span></div>
+                                {% for product in products %}
+                                    {% if product.price_with_sale %}
+                                    <div class="col-lg-4">
+                                        <div class="product__discount__item">
+                                            <div class="product__discount__item__pic set-bg"
+                                                data-setbg="{{ product.img.url }}">
+                                                <div class="product__discount__percent">-{{ product.sale }}%</div>
+                                                <ul class="product__item__pic__hover">
+                                                    <li>
+                                                        <a onclick="click_on_btn_for_heart('{{ product.id }}');"><i class="fa fa-heart"></i></a>
+                                                        <form action="{% url 'change_wish_list' %}" method="POST" style="display: none">
+                                                            {% csrf_token %}
+                                                            <input type="text" name="id" value="{{ product.id }}">
+                                                            <input type="text" name="back" value="{{ request.path }}">
+                                                            <button id="{{ product.id }}"></button>
+                                                        </form>
+                                                    </li>
+                                                    <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                                                </ul>
+                                            </div>
+                                            <div class="product__discount__item__text">
+                                                <span>{{ product.department }}</span>
+                                                <h5><a href="{{ product.get_absolute_url }}">{{ product.name }}</a></h5>
+                                                <div class="product__item__price">${{ product.price_with_sale }}<span>${{ product.price }}</span></div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="col-lg-4">
-                                    <div class="product__discount__item">
-                                        <div class="product__discount__item__pic set-bg"
-                                            data-setbg="img/product/discount/pd-3.jpg">
-                                            <div class="product__discount__percent">-20%</div>
-                                            <ul class="product__item__pic__hover">
-                                                <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                                <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                                                <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                                            </ul>
-                                        </div>
-                                        <div class="product__discount__item__text">
-                                            <span>Dried Fruit</span>
-                                            <h5><a href="#">Mixed Fruitss</a></h5>
-                                            <div class="product__item__price">$30.00 <span>$36.00</span></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4">
-                                    <div class="product__discount__item">
-                                        <div class="product__discount__item__pic set-bg"
-                                            data-setbg="img/product/discount/pd-4.jpg">
-                                            <div class="product__discount__percent">-20%</div>
-                                            <ul class="product__item__pic__hover">
-                                                <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                                <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                                                <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                                            </ul>
-                                        </div>
-                                        <div class="product__discount__item__text">
-                                            <span>Dried Fruit</span>
-                                            <h5><a href="#">Raisin’n’nuts</a></h5>
-                                            <div class="product__item__price">$30.00 <span>$36.00</span></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4">
-                                    <div class="product__discount__item">
-                                        <div class="product__discount__item__pic set-bg"
-                                            data-setbg="img/product/discount/pd-5.jpg">
-                                            <div class="product__discount__percent">-20%</div>
-                                            <ul class="product__item__pic__hover">
-                                                <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                                <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                                                <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                                            </ul>
-                                        </div>
-                                        <div class="product__discount__item__text">
-                                            <span>Dried Fruit</span>
-                                            <h5><a href="#">Raisin’n’nuts</a></h5>
-                                            <div class="product__item__price">$30.00 <span>$36.00</span></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4">
-                                    <div class="product__discount__item">
-                                        <div class="product__discount__item__pic set-bg"
-                                            data-setbg="img/product/discount/pd-6.jpg">
-                                            <div class="product__discount__percent">-20%</div>
-                                            <ul class="product__item__pic__hover">
-                                                <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                                <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                                                <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                                            </ul>
-                                        </div>
-                                        <div class="product__discount__item__text">
-                                            <span>Dried Fruit</span>
-                                            <h5><a href="#">Raisin’n’nuts</a></h5>
-                                            <div class="product__item__price">$30.00 <span>$36.00</span></div>
-                                        </div>
-                                    </div>
-                                </div>
+                                    {% endif %}
+                                {% endfor %}
                             </div>
                         </div>
                     </div>
                     <div class="filter__item">
                         <div class="row">
+                            <div class="col-lg-4 col-md-5">
+                                <div class="filter__sort">
+                                    <span>{% trans 'Сортировать по' %}</span>
+                                    <select>
+                                        <option value="0">{% trans 'Умолчанию' %}</option>
+                                        <option value="0">{% trans 'С конца' %}</option>
+                                        <option value="0">{% trans 'Случайно' %}</option>
+                                    </select>
+                                </div>
+                            </div>
                             <div class="col-lg-4 col-md-4">
                                 <div class="filter__found">
-                                    <h6><span>16</span>{% trans 'Продуктов найдено' %}</h6>
+                                    <h6><span id="int"> 16 </span>{% trans 'продуктов' %}</h6>
                                 </div>
                             </div>
                             <div class="col-lg-4 col-md-3">
@@ -400,17 +232,24 @@
                     </div>
                     <div class="row">
                         {% for product in products %}
-                        <div class="col-lg-4 col-md-6 col-sm-6">
+                        <div class="col-lg-4 col-md-6 col-sm-6" id="quantity">
                             <div class="product__item">
-                                <div class="product__item__pic set-bg" data-setbg="{{ product.img.url }}">
+                                <div class="product__item__pic set-bg" data-setbg="{{ product.img.url }}" id="img_list">
                                     <ul class="product__item__pic__hover">
-                                        <li><a href="{% url 'change_wish_list' product.id %}"><i class="fa fa-heart"></i></a></li>
-                                        <li><a href="#"><i class="fa fa-retweet"></i></a></li>
+                                        <li>
+                                            <a onclick="click_on_btn_for_heart('{{ product.id }}');"><i class="fa fa-heart"></i></a>
+                                            <form action="{% url 'change_wish_list' %}" method="POST" style="display: none">
+                                                {% csrf_token %}
+                                                <input type="text" name="id" value="{{ product.id }}">
+                                                <input type="text" name="back" value="{{ request.path }}">
+                                                <button id="{{ product.id }}"></button>
+                                            </form>
+                                        </li>
                                         <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
                                     </ul>
                                 </div>
                                 <div class="product__item__text">
-                                    <h6><a href="#">{{ product.name }}</a></h6>
+                                    <h6><a href="{{ product.get_absolute_url }}">{{ product.name }}</a></h6>
                                     <h5>${{ product.price }}</h5>
                                 </div>
                             </div>
@@ -427,4 +266,13 @@
             </div>
         </div>
     </section>
+    <script>
+        function click_on_btn_for_heart(id){
+            btn = document.getElementById(id);
+            btn.click();
+        }
+        
+        let int = document.querySelectorAll('#quantity').length;
+        document.querySelector('#int').innerText = int;
+    </script>
 {% endblock %}

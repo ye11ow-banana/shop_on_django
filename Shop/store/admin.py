@@ -11,11 +11,10 @@ class DepartmentAdmin(TranslationAdmin):
     list_display_links = ("name",)
 
 
-class ReviewInline(admin.TabularInline):
-    """Отзывы на странице фильма"""
-    model = Reviews
-    extra = 1
-    readonly_fields = ("name", "email")
+@admin.register(Reviews)
+class ReviewsAdmin(admin.ModelAdmin):
+    '''Отзыв'''
+    list_display = ('product', 'parent', 'id')
 
 
 class GalleryInline(admin.TabularInline):
@@ -71,13 +70,6 @@ class ProductAdmin(TranslationAdmin):
     unpublish.allowed_permissions = ('change',)
 
 
-@admin.register(Reviews)
-class ReviewsAdmin(TranslationAdmin):
-    """Отзывы"""
-    list_display = ("name", "email", "parent", "product", "id")
-    readonly_fields = ("name", "email")
-
-
 @admin.register(Coupon)
 class CouponAdmin(TranslationAdmin):
     """Отзывы"""
@@ -104,7 +96,10 @@ class WishAdmin(admin.ModelAdmin):
     readonly_fields = ("ip", "item")
 
 
-admin.site.register(Color)
+@admin.register(Color)
+class ColorAdmin(TranslationAdmin):
+    '''Цвет'''
+    list_display = ('name', 'id')
 
 admin.site.site_title = 'Store'
 admin.site.site_header = 'Store'

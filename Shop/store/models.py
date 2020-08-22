@@ -17,6 +17,7 @@ class Department(models.Model):
 
 class Color(models.Model):
     name = models.CharField("Название", max_length=100)
+    class_for_css = models.CharField("Название класса для css", max_length=100, blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -33,6 +34,7 @@ class Product(models.Model):
     department = models.ForeignKey(Department, verbose_name="Департамент", on_delete=models.CASCADE)
     sale = models.PositiveIntegerField("Скидка", blank=True, help_text="Percent", null=True)
     price = models.PositiveIntegerField("Цена", default=0, help_text="Указывать в долларах")
+    price_with_sale = models.PositiveIntegerField("Стоимость со скидкой", default=0, help_text="Указывать в долларах")
     pub_date = models.DateTimeField('Дата публикации', auto_now_add=True)
     url = models.SlugField(max_length=130, unique=True)
     draft = models.BooleanField("Черновик", default=False)
@@ -42,20 +44,12 @@ class Product(models.Model):
     wishes = models.BooleanField("Желания", default=False)
     class_for_css = models.CharField("Название класса для css", max_length=100, blank=True, null=True)
 
-    def get_sale(self):
-        '''Расчитать стоимость со скидкой'''
-        if str(type(self.sale)) == "<class 'NoneType'>":
-            return False
-        else:
-            price = self.price * ((100 - self.sale) / 100)
-            return price
-
     def __str__(self):
         return self.name
 
 
     def get_absolute_url(self):
-        return reverse('product_detail', kwargs={'slug': self.url})
+        return reverse('product_detail', kwargs={'product': self.url})
 
     class Meta: 
         verbose_name = 'Продукт'
@@ -73,8 +67,6 @@ class Gallery(models.Model):
 
 
 class Reviews(models.Model):
-    email = models.EmailField()
-    name = models.CharField("Имя", max_length=100)
     text = models.TextField("Сообщение", max_length=5000)
     parent = models.ForeignKey(
         'self', verbose_name="Родитель", on_delete=models.SET_NULL, blank=True, null=True
@@ -86,7 +78,7 @@ class Reviews(models.Model):
 
 
     class Meta: 
-        verbose_name = 'Отзывы'
+        verbose_name = 'Отзыв'
         verbose_name_plural = 'Отзывы'
 
 

@@ -17,11 +17,6 @@ class ProductTranslationOptions(TranslationOptions):
 	fields = ('name', 'description')
 
 
-@register(Reviews)
-class ReviewsTranslationOptions(TranslationOptions):
-	fields = ('name', 'text')
-
-
 @register(Advert)
 class AdvertTranslationOptions(TranslationOptions):
 	fields = ('title', 'text')
