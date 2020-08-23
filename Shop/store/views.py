@@ -21,11 +21,6 @@ def main_page_view(request):
 def product_detail_view(request, product: str):
 	'''Рендерит страницу деталей конкретного продукта'''
 	product = services.get_object_product_from_str(product)
-
-	if request.method == 'POST':
-		text = request.POST.get('text')
-		Reviews.objects.create(text=text, product=product)
-
 	return render(request, 'shop-details.html',
 		{
 			'product': product,
@@ -35,6 +30,15 @@ def product_detail_view(request, product: str):
 			'similar_products': services.get_similar_products(product),
 			'reviews': services.get_reviews_for_product(product),
 		})
+
+
+def add_review_view(request, id: int):
+	if request.method == 'POST':
+		product = services.get_object_product_from_int(id)
+		text = request.POST.get('text')
+		Reviews.objects.create(text=text, product=product, user=request.user)
+
+		return redirect(request.POST.get('path'))
 
 
 def shop_grid_view(request):

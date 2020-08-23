@@ -15,7 +15,6 @@ def get_reviews_for_product(product):
 
 
 def get_object_product_from_str(product: str):
-	print(products.filter(url=product))
 	return products.filter(url=product)[0]
 
 
@@ -94,3 +93,7 @@ def get_similar_products(product_obj) -> list:
 			similar_products.append(product)
 
 	return similar_products
+
+
+def get_object_product_from_int(id: int):
+	return Product.objects.get(id=id)

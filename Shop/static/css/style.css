@@ -3519,6 +3519,7 @@ a {
 	width: 50%;
 	display: inline-block;
 	margin-left: 50%;
+	margin-top: 50px;
 }
 
 .add_review_form textarea {
@@ -3530,7 +3531,7 @@ a {
 	padding: 10px;
 	background-color: #7fad39;
 	color: #FFFFFF;
-
+	overflow:hidden;
 }
 
 .add_review_form textarea::-webkit-input-placeholder { 
@@ -3558,11 +3559,38 @@ a {
 	color: black;
 }
 
-.review {
-	text-align: center;
-	margin: 50px;
-	color: black;
+.review {	
+	margin: 30px;
 	border-radius: 10px;
 	border: 0px;
 	background-color: #7fad39;
+	width: 50%;
+	height: auto;
+	display: inline-block;
+}
+
+
+.review_text {
+	float: left;
+	text-align: center;
+	padding: 10px;
+	color: #FFFFFF;
+	font-size: 20px;
+}
+
+.basket {
+	float: right;
+	padding: 10px;
+	background-color: #FF4500;
+	height: 50px;
+	width: 50px;
+	border-radius: 10px 0px 10px 0px;
+	cursor: pointer;
+	text-align: center;
+	transition: all 0.3s;
+}
+
+
+.basket:hover {
+	background-color: #C71616;
 }

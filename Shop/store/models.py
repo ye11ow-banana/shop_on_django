@@ -72,9 +72,10 @@ class Reviews(models.Model):
         'self', verbose_name="Родитель", on_delete=models.SET_NULL, blank=True, null=True
     )
     product = models.ForeignKey(Product, verbose_name="продукт", on_delete=models.CASCADE)
+    user = models.ForeignKey(User, verbose_name="пользователь", on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.name} - {self.product}"
+        return f"{self.user} - {self.product}"
 
 
     class Meta: 
