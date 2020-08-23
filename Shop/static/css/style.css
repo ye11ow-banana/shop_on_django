@@ -3531,7 +3531,7 @@ a {
 	padding: 10px;
 	background-color: #7fad39;
 	color: #FFFFFF;
-	overflow:hidden;
+	overflow: hidden;
 }
 
 .add_review_form textarea::-webkit-input-placeholder { 
@@ -3561,7 +3561,8 @@ a {
 
 .review {	
 	margin: 30px;
-	border-radius: 10px;
+	margin-top: 0px;
+	border-radius: 0px 10px 10px 10px;
 	border: 0px;
 	background-color: #7fad39;
 	width: 50%;
@@ -3569,13 +3570,14 @@ a {
 	display: inline-block;
 }
 
-
-.review_text {
-	float: left;
-	text-align: center;
-	padding: 10px;
+.text {
 	color: #FFFFFF;
+	background-color: #7fad39;
+	border: 0px;
+	padding: 10px;
 	font-size: 20px;
+	width: 100%;
+	border-radius: 10px;
 }
 
 .basket {
@@ -3583,14 +3585,92 @@ a {
 	padding: 10px;
 	background-color: #FF4500;
 	height: 50px;
-	width: 50px;
-	border-radius: 10px 0px 10px 0px;
+	width: 50%;
+	border-radius: 0px 0px 10px 0px;
+	border: 0px;
+	outline: none;
 	cursor: pointer;
 	text-align: center;
 	transition: all 0.3s;
+	border: 0px;
 }
 
 
 .basket:hover {
 	background-color: #C71616;
 }
+
+.pencil {
+	float: right;
+	padding: 10px;
+	background-color: #6767D7;
+	height: 50px;
+	width: 50%;
+	border-radius: 0px 0px 0px 10px;
+	cursor: pointer;
+	text-align: center;
+	transition: all 0.3s;
+	border: 0px;	
+}
+
+.pencil:hover {
+	background-color: #4040D1;
+}
+
+.user {
+	margin: 30px;
+	margin-bottom: 0px;
+	border-radius: 10px 10px 0px 0px;
+	border: 0px;
+	background-color: #A5D072;
+	width: 25%;
+	height: auto;
+	padding: 5px;
+	padding-left: 10px;
+	color: #FFFFFF;
+	font-size: 20px;
+	transition: all 0.3s;
+	overflow: hidden;
+}
+
+.user:hover {
+	background-color: #93BB63;
+	cursor: pointer;
+}
+
+.dislike {
+	float: right;
+	padding: 10px;
+	background-color: #9FEC41;
+	height: 50px;
+	width: 50px;
+	border-radius: 10px 0px 0px 0px;
+	cursor: pointer;
+	text-align: center;
+	transition: all 0.3s;
+}
+
+.dislike:hover {
+	background-color: #5F8134;	
+}
+
+.like {
+	float: right;
+	padding: 10px;
+	background-color: #9FEC41;
+	height: 50px;
+	width: 50px;
+	border-radius: 0px 0px 10px 0px;
+	cursor: pointer;
+	text-align: center;
+	transition: all 0.3s;
+}
+
+.like:hover {
+	background-color: #5F8134;
+}
+
+.product__details__rating:hover {
+	cursor: default;
+}
+

@@ -111,13 +111,16 @@
                 </div>
                 <div class="col-lg-6 col-md-6">
                     <div class="product__details__text">
-                        <h3>{{ product.name }}</h3>
-                        <div class="product__details__rating">
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star-half-o"></i>
-                            <span>(18 reviews)</span>
+                        <div class="pochenu" onmouseout="default_star()">
+                            <h3>{{ product.name }}</h3>
+                            <div class="product__details__rating">
+                                <div class="fa" id="star_1" onmouseover="choose_stars('1')"><i class="fa fa-star"></i></div>
+                                <div class="fa" id="star_2" onmouseover="choose_stars('2')"><i class="fa fa-star"></i></div>
+                                <div class="fa" id="star_3" onmouseover="choose_stars('3')"><i class="fa fa-star"></i></div>
+                                <div class="fa" id="star_4" onmouseover="choose_stars('4')"><i class="fa fa-star-half-o"></i></div>
+                                <div class="fa" id="star_5" onmouseover="choose_stars('5')"><i class="fa fa-star-o"></i></div>                        
+                                <span id="quantity_reviews_top"></span>
+                            </div>
                         </div>
                         {% if product.price_with_sale %}
                             <div class="product__details__price">$<span id="price">{{ product.price_with_sale }}</span></div>
@@ -181,26 +184,108 @@
 
                             <div class="tab-pane" id="tabs-3" role="tabpanel">
                                 {% if reviews %}
+
                                     {% for review in reviews %}
+                                        <div class="user">{{ review.user }}</div>
                                         <div class="review">
-                                            <div class="review_text">{{ review.text }}</div>
-                                            <div class="basket"><img src="https://img.icons8.com/android/24/000000/full-trash.png"/></div>
+
+                                            <form action="{% url 'change_review' review.id %}" method="POST" class="review_text">
+                                                {% csrf_token %}
+                                                <textarea id="text_pencil_{{ review.id }}" style="overflow: hidden;" disabled name="text" class="text">{{ review.text }}</textarea>
+                                                <input type="text" name="path" value="{{ request.path }}" style="display: none;">
+                                                <button style="display: none;" id="btn_text_pencil_{{ review.id }}"></button>
+                                            </form>
+
+
+                                            {% if request.user == review.user %}
+                                                <div class="basket" id="div_basket_{{ review.id }}" onclick="delete_review('{{ review.id }}')">
+                                                    <img src="https://img.icons8.com/android/24/000000/full-trash.png"/>
+                                                    <input type="text" name="path" value="{{ request.path }}" style="display: none;">
+                                                </div>
+
+                                                <button class="basket" id="btn_basket_{{ review.id }}" style="display: none;" onclick="back('{{ review.id }}')">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
+                                                    width="24" height="24"
+                                                    viewBox="0 0 172 172"
+                                                    style=" fill:#000000;"><g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><path d="M0,172v-172h172v172z" fill="none"></path><g fill="#ffffff"><path d="M49.5575,44.72l-4.8375,4.8375l36.55,36.4425l-36.55,36.4425l4.8375,4.8375l36.6575,-36.4425l36.55,36.4425l4.8375,-4.8375l-36.55,-36.4425l36.55,-36.4425l-4.8375,-4.8375l-36.55,36.4425z"></path></g></g></svg>
+                                                </button>
+
+                                                <form class="pencil" id="form_basket_{{ review.id }}" action="{% url 'remove_review' review.id %}" method="POST" style="display: none;" 
+                                                onclick="document.getElementById('btn_basket_form_{{ review.id }}').click();">
+                                                    {% csrf_token %}
+                                                        <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
+                                                        width="24" height="24"
+                                                        viewBox="0 0 172 172"
+                                                        style=" fill:#000000;"><g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><path d="M0,172v-172h172v172z" fill="none"></path><g fill="#ffffff"><path d="M147.49,29.67c-0.1075,0.02688 -0.215,0.06719 -0.3225,0.1075c-0.90031,0.22844 -1.67969,0.80625 -2.15,1.6125l-70.305,109.005l-48.375,-43.645c-0.84656,-1.075 -2.2575,-1.54531 -3.58781,-1.19594c-1.33031,0.34937 -2.31125,1.46469 -2.51281,2.82187c-0.20156,1.35719 0.41656,2.70094 1.58562,3.42656l51.2775,46.44c0.7525,0.65844 1.76031,0.95406 2.75469,0.80625c0.99438,-0.14781 1.86781,-0.71219 2.40531,-1.55875l72.5625,-112.445c0.79281,-1.12875 0.83313,-2.62031 0.1075,-3.78937c-0.72562,-1.16906 -2.08281,-1.78719 -3.44,-1.58563z"></path></g></g></svg>
+                                                    <input type="text" name="path" value="{{ request.path }}" style="display: none;">
+                                                    <button style="display: none;" id="btn_basket_form_{{ review.id }}"></button>
+                                                </form>
+
+                                                <div class="pencil" id="div_pencil_{{ review.id }}" onclick="edit_text('{{ review.id }}');">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
+                                                        width="24" height="24"
+                                                        viewBox="0 0 172 172"
+                                                        style=" fill:#000000;">
+                                                        <g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal">
+                                                            <path d="M0,172v-172h172v172z" fill="none">
+                                                            </path>
+                                                            <g fill="#ffffff">
+                                                                <path d="M129,14.33333l-14.33333,14.33333l28.66667,28.66667l14.33333,-14.33333zM103.91667,39.41667l-68.08333,68.08333c0,0 7.2025,0.03583 10.75,3.58333c3.5475,3.5475 3.47135,10.63802 3.47135,10.63802c0,0 7.30731,0.14065 10.86198,3.69531c3.55467,3.55467 3.58333,10.75 3.58333,10.75l68.08333,-68.08333zM26.30111,121.83333l-4.80111,28.66667l28.66667,-4.80111z">
+                                                                </path>
+                                                            </g>
+                                                        </g>
+                                                    </svg>
+                                                </div>
+
+                                                <button class="basket" id="btn_pencil_{{ review.id }}" style="display: none;" onclick="back('{{ review.id }}')">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
+                                                    width="24" height="24"
+                                                    viewBox="0 0 172 172"
+                                                    style=" fill:#000000;"><g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><path d="M0,172v-172h172v172z" fill="none"></path><g fill="#ffffff"><path d="M49.5575,44.72l-4.8375,4.8375l36.55,36.4425l-36.55,36.4425l4.8375,4.8375l36.6575,-36.4425l36.55,36.4425l4.8375,-4.8375l-36.55,-36.4425l36.55,-36.4425l-4.8375,-4.8375l-36.55,36.4425z"></path></g></g></svg>
+                                                </button>
+
+                                                <button class="pencil" style="display: none;" id="btn_pencil_form_{{ review.id }}" 
+                                                onclick="document.getElementById('btn_text_pencil_{{ review.id }}').click();">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
+                                                    width="24" height="24"
+                                                    viewBox="0 0 172 172"
+                                                    style=" fill:#000000;"><g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><path d="M0,172v-172h172v172z" fill="none"></path><g fill="#ffffff"><path d="M147.49,29.67c-0.1075,0.02688 -0.215,0.06719 -0.3225,0.1075c-0.90031,0.22844 -1.67969,0.80625 -2.15,1.6125l-70.305,109.005l-48.375,-43.645c-0.84656,-1.075 -2.2575,-1.54531 -3.58781,-1.19594c-1.33031,0.34937 -2.31125,1.46469 -2.51281,2.82187c-0.20156,1.35719 0.41656,2.70094 1.58562,3.42656l51.2775,46.44c0.7525,0.65844 1.76031,0.95406 2.75469,0.80625c0.99438,-0.14781 1.86781,-0.71219 2.40531,-1.55875l72.5625,-112.445c0.79281,-1.12875 0.83313,-2.62031 0.1075,-3.78937c-0.72562,-1.16906 -2.08281,-1.78719 -3.44,-1.58563z"></path></g></g></svg>
+                                                </button>
+
+                                            {% else %}
+                                                <button class="like">                                         
+                                                    <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
+                                                    width="24" height="24"
+                                                    viewBox="0 0 172 172"
+                                                    style=" fill:#000000;"><g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><path d="M0,172v-172h172v172z" fill="none"></path><g fill="#ffffff"><path d="M101.53711,7.16667l-47.18522,47.26921c-2.68033,2.6875 -4.18522,6.32178 -4.18522,10.12012v71.61068c0,7.91917 6.41417,14.33333 14.33333,14.33333h64.44401c5.72617,0 10.90688,-3.41089 13.17155,-8.67839l21.55599,-50.18066c0.76683,-1.7845 1.16178,-3.71278 1.16178,-5.65494v-14.31934c0,-7.91917 -6.41417,-14.33333 -14.33333,-14.33333h-45.51953l6.71875,-30.79427c1.04633,-4.80167 -0.45677,-9.8152 -3.96127,-13.26953zM7.16667,64.5v86h28.66667v-86z"></path></g></g></svg>
+                                                </button>
+                                                <button class="dislike">
+                                                    <img src="https://img.icons8.com/material-rounded/24/000000/thumbs-down.png"/>
+                                                </button>
+                                            {% endif %}
+
                                         </div>
                                     {% endfor %}
+
                                 {% else %}
                                     <p class="add_review_first">{% trans 'Оставьте отзыв первым' %}!</p>
                                 {% endif %}
 
+
+
                                 {% if request.user.is_authenticated %}
+
                                     <form class="add_review_form" method="POST" action="{% url 'add_review' product.id %}">
                                         {% csrf_token %}
-                                        <textarea placeholder="{% trans 'Ваш отзыв' %}" name="text"></textarea><br>
+                                        <textarea placeholder="{% trans 'Ваш отзыв' %}" name="text" class="textarea"></textarea><br>
                                         <input type="text" name="path" style="display: none;" value="{{ request.path }}">
                                         <button type="submit">{% trans 'ОСТАВИТЬ ОТЗЫВ' %}</button>
                                     </form>
+
                                 {% else %}
                                     <p>{% trans 'Чтобы добавить отзыв нужно ввойти в аккаунт' %}</p>
                                 {% endif %}
+
                             </div>
                         </div>
                     </div>
@@ -275,17 +360,119 @@
         });
 
 
-        var textarea = document.querySelector('textarea');
+        var textarea = document.getElementsByClassName('textarea')[0];
 
-        textarea.addEventListener('keyup', function(){
-          if(this.scrollTop > 0){
-            this.style.height = this.scrollHeight + "px";
-          }
-        });
+
+        if (textarea) {
+            textarea.addEventListener('keyup', function(){
+              if(this.scrollTop > 0){
+                this.style.height = this.scrollHeight + "px";
+              }
+            });
+        }
+
+
+        var text_area = document.getElementsByClassName('text');
+        for (let i = 0; i < text_area.length; i++) {
+            
+            if (text_area[i]) {
+                this.style.height = this.scrollHeight + "px";
+            };
+        };
+
 
         let reviews = document.getElementsByClassName('review');
 
-        document.getElementById('quantity_reviews').innerHTML = '(' + reviews.length + ')';        
+        document.getElementById('quantity_reviews').innerHTML = '(' + reviews.length + ')';
+        document.getElementById('quantity_reviews_top').innerHTML = '(' + reviews.length + " {% trans 'отзывов' %}" + ')';
 
+        let default_str = document.getElementsByClassName('pochenu')[0].innerHTML;
+
+        function default_star(){
+            document.getElementsByClassName('pochenu')[0].innerHTML = default_str;
+        }
+
+        function choose_stars(index){
+
+            let full = '<i class="fa fa-star"></i>';
+            let zero = '<i class="fa fa-star-o"></i>';
+
+            let stars = [
+                document.getElementById('star_1'),
+                document.getElementById('star_2'),
+                document.getElementById('star_3'),
+                document.getElementById('star_4'),
+                document.getElementById('star_5')
+            ]
+
+            let results;
+
+            if (index === '1'){
+                results = [full, zero, zero, zero, zero];
+            } 
+            else if (index === '2'){
+                results = [full, full, zero, zero, zero];
+            }
+            else if (index === '3'){
+                results = [full, full, full, zero, zero];
+            }
+            else if (index === '4'){
+                results = [full, full, full, full, zero];
+            }
+            else if (index === '5'){
+                results = [full, full, full, full, full];
+            }
+
+            for (let i = 0; i < stars.length; i++){
+                stars[i].innerHTML = results[i];
+            }
+        }
+
+        function delete_review(id){
+
+            let div_basket = document.getElementById('div_basket_' + id);
+            let div_pencil = document.getElementById('div_pencil_' + id);
+            let btn_basket = document.getElementById('btn_basket_' + id);
+            let form_basket = document.getElementById('form_basket_' + id);
+
+            div_basket.style.display = 'none';
+            div_pencil.style.display = 'none';
+            btn_basket.style.display = 'inline-block';
+            form_basket.style.display = 'inline-block';           
+        }
+
+        function edit_text(id){
+
+            let div_basket = document.getElementById('div_basket_' + id);
+            let div_pencil = document.getElementById('div_pencil_' + id);
+            let btn_pencil = document.getElementById('btn_pencil_' + id);
+            let button = document.getElementById('btn_pencil_form_' + id);
+            let text_pencil = document.getElementById('text_pencil_' + id);
+
+            div_basket.style.display = 'none';
+            div_pencil.style.display = 'none';
+            btn_pencil.style.display = 'inline-block';
+            button.style.display = 'inline-block';
+            text_pencil.disabled = 0;
+        }
+
+        function back(id){
+
+            let div_basket = document.getElementById('div_basket_' + id);
+            let div_pencil = document.getElementById('div_pencil_' + id);
+            let btn_pencil = document.getElementById('btn_pencil_' + id);
+            let btn_basket = document.getElementById('btn_basket_' + id);
+            let button = document.getElementById('btn_pencil_form_' + id);
+            let form_basket = document.getElementById('form_basket_' + id);
+            let text_pencil = document.getElementById('text_pencil_' + id);
+
+            div_basket.style.display = 'inline-block';
+            div_pencil.style.display = 'inline-block';
+            btn_pencil.style.display = 'none';
+            btn_basket.style.display = 'none';
+            button.style.display = 'none';
+            form_basket.style.display = 'none';
+            text_pencil.disabled = 1;            
+        }
     </script>
 {% endblock %}

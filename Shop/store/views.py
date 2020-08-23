@@ -41,6 +41,19 @@ def add_review_view(request, id: int):
 		return redirect(request.POST.get('path'))
 
 
+def remove_review_view(request, id: int):
+	if request.method == 'POST':
+		Reviews.objects.filter(id=id).delete()
+		return redirect(request.POST.get('path'))
+
+def change_review_view(request, id: int):
+	if request.method == 'POST':
+		review = Reviews.objects.filter(id=id)
+		review.update(text=request.POST.get('text'))
+
+		return redirect(request.POST.get('path'))
+
+
 def shop_grid_view(request):
 	'''Рендерит страницу с товарами'''
 	return render(request, 'shop-grid.html', 
