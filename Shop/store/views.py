@@ -1,69 +1,81 @@
-from django.urls import reverse
 from django.shortcuts import render, redirect 
-from . import services
-from .models import Reviews
+from . import services 
 
 
 def main_page_view(request):
 	'''Рендерит главную страницу'''	
 	return render(request, 'index.html', 
 		{
-			'top_slider_products': services.products.order_by(
-				'-pub_date')[:5],
+			'products': services.products,
 			'departments': services.departments,
 			'advert': services.advert,
-			'user': request.user,
 			'quantity_of_hearts': services.count_wishes(request),
-			'featured_products': services.products,
 		})
 
 
 def product_detail_view(request, product: str):
 	'''Рендерит страницу деталей конкретного продукта'''
-	product = services.get_object_product_from_str(product)
+	product = services.get_model_object_of_product(product)
+
 	return render(request, 'shop-details.html',
 		{
 			'product': product,
 			'departments': services.departments,
-			'photos': services.get_photos_for_product(product),
-			'quantity_of_hearts': services.count_wishes(request),
+			'photos': services.galleries.filter(product=product),
+			'quantity_of_hearts': services.count_wishes(request),	
 			'similar_products': services.get_similar_products(product),
-			'reviews': services.get_reviews_for_product(product),
+			'reviews': services.reviews.filter(product=product),
+			'liked': services.add_to_like_list(request),
+			'disliked': services.add_to_dislike_list(request),
 		})
+
+
+def add_dislike_view(request, id: int):
+	if request.method == 'POST':
+		services.add_dislike(request.user, id)
+
+	return redirect(request.POST.get('path'))
+
+
+def add_like_view(request, id: int):
+	if request.method == 'POST':
+		services.add_like(request.user, id)
+
+	return redirect(request.POST.get('path'))
 
 
 def add_review_view(request, id: int):
 	if request.method == 'POST':
-		product = services.get_object_product_from_int(id)
-		text = request.POST.get('text')
-		Reviews.objects.create(text=text, product=product, user=request.user)
+		services.add_review(request, 
+			services.get_model_object_of_product(id))
 
-		return redirect(request.POST.get('path'))
+	return redirect(request.POST.get('path'))
 
 
 def remove_review_view(request, id: int):
 	if request.method == 'POST':
-		Reviews.objects.filter(id=id).delete()
-		return redirect(request.POST.get('path'))
+		services.reviews.filter(id=id).delete()
+
+	return redirect(request.POST.get('path'))
+
 
 def change_review_view(request, id: int):
 	if request.method == 'POST':
-		review = Reviews.objects.filter(id=id)
-		review.update(text=request.POST.get('text'))
+		reviews = services.reviews.filter(id=id)[0]
+		reviews.text = request.POST.get('text')
 
-		return redirect(request.POST.get('path'))
+	return redirect(request.POST.get('path'))
 
 
 def shop_grid_view(request):
 	'''Рендерит страницу с товарами'''
 	return render(request, 'shop-grid.html', 
 		{
-			'products': services.products.order_by(
-				'-pub_date'),
+			'products': services.products,
 			'most_expensive_price': 
-				services.get_most_expensive_and_cheapest_price()[0],
+				services.get_most_expensive_and_cheapest_price()[0],  # !
 			'the_cheapest_price': 
-				services.get_most_expensive_and_cheapest_price()[1],
+				services.get_most_expensive_and_cheapest_price()[1],  # !
 			'quantity_of_hearts': services.count_wishes(request),
 			'departments': services.departments,
 			'colors': services.colors,
@@ -77,7 +89,6 @@ def contact_view(request):
 			str(request.POST.get('email')), str(request.POST.get('name')), 
 			str(request.POST.get('message'))
 		)
-		return render(request, 'contact.html')
 
 	return render(request, 'contact.html', {
 		'departments': services.departments,
@@ -91,16 +102,15 @@ def social_networks_view(request):
 	return render(request, 'social_networks.html')
 
 
-def change_wish_list_view(request):
-	if request.method == 'POST':
-		pk = request.POST.get('id')
-		
-		if request.user.is_authenticated:
-			services.change_wish_list_of_user(request, pk)
-		else:
-			services.change_wish_list(request, pk)
+def change_wish_list_view(request, id: int):
+	if request.method == 'POST':	
+		try:
+			services.change_wish_list_of_user(request.user, id)
 
-		return redirect(request.POST.get('back'))
+		except ValueError:
+			services.change_wish_list_of_anonymous(request, id)
+
+	return redirect(request.POST.get('path'))
 
 
 def about_view(request):

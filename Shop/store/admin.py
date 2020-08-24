@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Department, Color, Product, Gallery, Reviews, News, Advert, Coupon, Wish
+from .models import Department, Color, Product, Gallery, Reviews, News, Advert, Coupon, Wish, Like, Dislike
 from django.utils.safestring import mark_safe
 from modeltranslation.admin import TranslationAdmin
 
@@ -14,7 +14,7 @@ class DepartmentAdmin(TranslationAdmin):
 @admin.register(Reviews)
 class ReviewsAdmin(admin.ModelAdmin):
     '''Отзыв'''
-    list_display = ('product', 'parent', 'id')
+    list_display = ('product', 'quantity_of_likes', 'parent', 'id')
 
 
 class GalleryInline(admin.TabularInline):
@@ -100,6 +100,19 @@ class WishAdmin(admin.ModelAdmin):
 class ColorAdmin(TranslationAdmin):
     '''Цвет'''
     list_display = ('name', 'id')
+
+
+@admin.register(Like)
+class LikeAdmin(admin.ModelAdmin):
+    '''Цвет'''
+    list_display = ('review', 'user', 'id')
+
+
+@admin.register(Dislike)
+class DislikeAdmin(admin.ModelAdmin):
+    '''Цвет'''
+    list_display = ('review', 'user', 'id')
+
 
 admin.site.site_title = 'Store'
 admin.site.site_header = 'Store'

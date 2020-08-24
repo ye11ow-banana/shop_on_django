@@ -73,10 +73,11 @@ class Reviews(models.Model):
     )
     product = models.ForeignKey(Product, verbose_name="продукт", on_delete=models.CASCADE)
     user = models.ForeignKey(User, verbose_name="пользователь", on_delete=models.CASCADE)
+    quantity_of_likes = models.PositiveIntegerField(default=0, help_text="Начинается с 0", verbose_name="Число лайков")
+    quantity_of_dislikes = models.PositiveIntegerField(default=0, help_text="Начинается с 0", verbose_name="Число дизлайков")
 
     def __str__(self):
         return f"{self.user} - {self.product}"
-
 
     class Meta: 
         verbose_name = 'Отзыв'
@@ -132,3 +133,13 @@ class Wish(models.Model):
     class Meta:
         verbose_name = 'Список желаний'
         verbose_name_plural = 'Список желаний'
+
+
+class Like(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    review = models.ForeignKey(Reviews, on_delete=models.CASCADE)
+
+
+class Dislike(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    review = models.ForeignKey(Reviews, on_delete=models.CASCADE)

@@ -137,10 +137,9 @@
                         </div>
                         <a href="#" class="primary-btn">{% trans 'ДОБАВИТЬ В КОРЗИНУ' %}</a>
                         <a class="heart-icon" onclick="click_on_btn_for_heart('{{ product.id }}');"><span class="icon_heart_alt"></span></a>
-                        <form action="{% url 'change_wish_list' %}" method="POST" style="display: none">
+                        <form action="{% url 'change_wish_list' product.id %}" method="POST" style="display: none">
                             {% csrf_token %}
-                            <input type="text" name="id" value="{{ product.id }}">
-                            <input type="text" name="back" value="{{ request.path }}">
+                            <input type="text" name="path" value="{{ request.path }}">
                             <button id="{{ product.id }}"></button>
                         </form>
                         <ul>
@@ -185,7 +184,7 @@
                             <div class="tab-pane" id="tabs-3" role="tabpanel">
                                 {% if reviews %}
 
-                                    {% for review in reviews %}
+                                    {% for review in reviews %}  
                                         <div class="user">{{ review.user }}</div>
                                         <div class="review">
 
@@ -253,15 +252,43 @@
                                                 </button>
 
                                             {% else %}
-                                                <button class="like">                                         
-                                                    <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
-                                                    width="24" height="24"
-                                                    viewBox="0 0 172 172"
-                                                    style=" fill:#000000;"><g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><path d="M0,172v-172h172v172z" fill="none"></path><g fill="#ffffff"><path d="M101.53711,7.16667l-47.18522,47.26921c-2.68033,2.6875 -4.18522,6.32178 -4.18522,10.12012v71.61068c0,7.91917 6.41417,14.33333 14.33333,14.33333h64.44401c5.72617,0 10.90688,-3.41089 13.17155,-8.67839l21.55599,-50.18066c0.76683,-1.7845 1.16178,-3.71278 1.16178,-5.65494v-14.31934c0,-7.91917 -6.41417,-14.33333 -14.33333,-14.33333h-45.51953l6.71875,-30.79427c1.04633,-4.80167 -0.45677,-9.8152 -3.96127,-13.26953zM7.16667,64.5v86h28.66667v-86z"></path></g></g></svg>
-                                                </button>
-                                                <button class="dislike">
-                                                    <img src="https://img.icons8.com/material-rounded/24/000000/thumbs-down.png"/>
-                                                </button>
+                                                <form action="{% url 'add_like' review.id %}" method="POST" class="like_form" onclick="document.getElementById('btr_add_like_{{ review.id }}').click();">
+                                                    {% csrf_token %}
+
+                                                    {% if review in liked %}
+                                                        {% if review.quantity_of_likes %}{{ review.quantity_of_likes }}{% endif %}
+                                                        <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
+                                                        width="24" height="24"
+                                                        viewBox="0 0 172 172"
+                                                        style=" fill:#000000;"><g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><path d="M0,172v-172h172v172z" fill="none"></path><g fill="#3498db"><path d="M101.53711,7.16667l-47.18522,47.26921c-2.68033,2.6875 -4.18522,6.32178 -4.18522,10.12012v71.61068c0,7.91917 6.41417,14.33333 14.33333,14.33333h64.44401c5.72617,0 10.90688,-3.41089 13.17155,-8.67839l21.55599,-50.18066c0.76683,-1.7845 1.16178,-3.71278 1.16178,-5.65494v-14.31934c0,-7.91917 -6.41417,-14.33333 -14.33333,-14.33333h-45.51953l6.71875,-30.79427c1.04633,-4.80167 -0.45677,-9.8152 -3.96127,-13.26953zM7.16667,64.5v86h28.66667v-86z"></path></g></g></svg>
+                                                    {% else %}
+                                                        {% if review.quantity_of_likes %}{{ review.quantity_of_likes }}{% endif %}
+                                                            <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
+                                                            width="24" height="24"
+                                                            viewBox="0 0 172 172"
+                                                            style=" fill:#000000;"><g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><path d="M0,172v-172h172v172z" fill="none"></path><g fill="#ffffff"><path d="M101.53711,7.16667l-47.18522,47.26921c-2.68033,2.6875 -4.18522,6.32178 -4.18522,10.12012v71.61068c0,7.91917 6.41417,14.33333 14.33333,14.33333h64.44401c5.72617,0 10.90688,-3.41089 13.17155,-8.67839l21.55599,-50.18066c0.76683,-1.7845 1.16178,-3.71278 1.16178,-5.65494v-14.31934c0,-7.91917 -6.41417,-14.33333 -14.33333,-14.33333h-45.51953l6.71875,-30.79427c1.04633,-4.80167 -0.45677,-9.8152 -3.96127,-13.26953zM7.16667,64.5v86h28.66667v-86z"></path></g></g></svg>
+                                                    {% endif %}
+                                                    
+                                                        <input type="text" name="path" value="{{ request.path }}" style="display: none;">
+                                                        <button style="display: none;" id="btr_add_like_{{ review.id }}"></button>
+                                                </form>
+                                                <form action="{% url 'add_dislike' review.id %}" method="POST" class="dislike_form" onclick="document.getElementById('btr_add_dislike_{{ review.id }}').click();">
+                                                    {% csrf_token %}
+
+                                                    {% if review in disliked %}
+                                                        {% if review.quantity_of_dislikes %}{{ review.quantity_of_dislikes }}{% endif %}
+                                                        <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
+                                                        width="24" height="24"
+                                                        viewBox="0 0 172 172"
+                                                        style=" fill:#000000;"><g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><path d="M0,172v-172h172v172z" fill="none"></path><g fill="#e74c3c"><path d="M14.33333,14.33333c-3.956,0 -7.16667,3.21067 -7.16667,7.16667v71.66667c0,3.956 3.21067,7.16667 7.16667,7.16667h14.33333c3.956,0 7.16667,-3.21067 7.16667,-7.16667v-71.66667c0,-3.956 -3.21067,-7.16667 -7.16667,-7.16667zM64.5,14.33333c-7.91917,0 -14.33333,6.41417 -14.33333,14.33333v71.61068c0,3.79833 1.50489,7.43261 4.18522,10.12011l39.62663,39.71061c4.17817,4.18533 10.94518,4.21232 15.15918,0.06999c2.63017,-2.58717 3.75578,-6.35415 2.96744,-9.96615l-7.12467,-32.71191h45.51953c7.91917,0 14.33333,-6.41417 14.33333,-14.33333v-14.31934c0,-1.94217 -0.39495,-3.87044 -1.16178,-5.65494l-21.55599,-50.18067c-2.2575,-5.2675 -7.44538,-8.67839 -13.17155,-8.67839z"></path></g></g></svg>
+                                                    {% else %}
+                                                        {% if review.quantity_of_dislikes %}{{ review.quantity_of_dislikes }}{% endif %}
+                                                        <img src="https://img.icons8.com/material-rounded/24/000000/thumbs-down.png"/>
+                                                    {% endif %}                                                
+                                                    
+                                                    <input type="text" name="path" value="{{ request.path }}" style="display: none;">
+                                                    <button style="display: none;" id="btr_add_dislike_{{ review.id }}"></button>
+                                                </form>
                                             {% endif %}
 
                                         </div>
@@ -313,10 +340,9 @@
                             <ul class="product__item__pic__hover">
                                 <li>
                                     <a onclick="click_on_btn_for_heart('{{ product.id }}');"><i class="fa fa-heart"></i></a>
-                                    <form action="{% url 'change_wish_list' %}" method="POST" style="display: none">
+                                    <form action="{% url 'change_wish_list' product.id %}" method="POST" style="display: none">
                                         {% csrf_token %}
-                                        <input type="text" name="id" value="{{ product.id }}">
-                                        <input type="text" name="back" value="{{ request.path }}">
+                                        <input type="text" name="path" value="{{ request.path }}">
                                         <button id="{{ product.id }}"></button>
                                     </form>
                                 </li>
@@ -372,13 +398,22 @@
         }
 
 
-        var text_area = document.getElementsByClassName('text');
+        let text_area = document.getElementsByClassName('text');
+        let sel = document.getElementsByClassName('product-details spad')[0];
+
         for (let i = 0; i < text_area.length; i++) {
-            
             if (text_area[i]) {
-                this.style.height = this.scrollHeight + "px";
-            };
-        };
+                text_area[i].disabled = 0;
+                sel.addEventListener('mouseover', function(){
+                    text_area[i].style.height = text_area[i].scrollHeight + "px";
+                    text_area[i].disabled = 1;
+                });
+           
+            }            
+        }
+
+
+
 
 
         let reviews = document.getElementsByClassName('review');

@@ -3578,6 +3578,7 @@ a {
 	font-size: 20px;
 	width: 100%;
 	border-radius: 10px;
+	min-height: 47px;
 }
 
 .basket {
@@ -3638,39 +3639,46 @@ a {
 	cursor: pointer;
 }
 
-.dislike {
+.dislike_form {
 	float: right;
 	padding: 10px;
 	background-color: #9FEC41;
 	height: 50px;
-	width: 50px;
-	border-radius: 10px 0px 0px 0px;
+	width: 50%;
+	border-radius: 0px 0px 0px 10px;
 	cursor: pointer;
 	text-align: center;
 	transition: all 0.3s;
+	border: 0px;
+	outline: none;
+	color: #FFFFFF;
+	font-size: 20px;
 }
 
-.dislike:hover {
+.dislike_form:hover {
 	background-color: #5F8134;	
 }
 
-.like {
+.like_form {
 	float: right;
 	padding: 10px;
 	background-color: #9FEC41;
 	height: 50px;
-	width: 50px;
+	width: 50%;
 	border-radius: 0px 0px 10px 0px;
 	cursor: pointer;
 	text-align: center;
+	border: 0px;
+	outline: none;
 	transition: all 0.3s;
+	color: #FFFFFF;
+	font-size: 20px;	
 }
 
-.like:hover {
+.like_form:hover {
 	background-color: #5F8134;
 }
 
 .product__details__rating:hover {
 	cursor: default;
 }
-

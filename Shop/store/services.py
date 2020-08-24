@@ -1,29 +1,82 @@
-from . import views
-from .models import Product, Department, Advert, Wish, Color, Gallery, Reviews
+from .models import (
+	Product, Department, Advert, Wish, 
+	Color, Gallery, Reviews, Like, Dislike
+)
 from Shop.settings import EMAIL_HOST_USER
 from django.core.mail import send_mail
 
-products = Product.objects.all().filter(draft=False)
+
+products = Product.objects.all().filter(
+	draft=False).order_by('-pub_date')
 departments = Department.objects.all()
 advert = Advert.objects.all()[0]
 colors = Color.objects.all()
+galleries = Gallery.objects.all()
 reviews = Reviews.objects.all()
-
-def get_reviews_for_product(product):
-	return reviews.filter(
-		product=product)
+wishes = Wish.objects.all()
 
 
-def get_object_product_from_str(product: str):
-	return products.filter(url=product)[0]
+def add_dislike(user, id: int) -> None:  # !
+	review = reviews.filter(id=id)[0]
+
+	try:
+		like = Like.objects.filter(user=user, review=review)
+		dislike = Dislike.objects.filter(user=user, review=review)
+
+		if like:
+			like.delete()
+			review.quantity_of_likes -= 1
+
+		if dislike:
+			dislike.delete()
+			review.quantity_of_dislikes -= 1
+		else:
+			dislike.create(user=user, review=review)
+			review.quantity_of_dislikes += 1
+
+		review.save()
+
+	except TypeError:
+		pass
 
 
-def get_photos_for_product(product) -> list:
-	return Gallery.objects.all().filter(
-		product=product)
+def add_like(user, id: int) -> None:  # !
+	review = reviews.filter(id=id)[0]
+
+	try:
+		like = Like.objects.filter(user=user, review=review)
+		dislike = Dislike.objects.filter(user=user, review=review)
+
+		if dislike:
+			dislike.delete()
+			review.quantity_of_dislikes -= 1
+
+		if like:
+			like.delete()
+			review.quantity_of_likes -= 1
+		else:
+			like.create(user=user, review=review)
+			review.quantity_of_likes += 1
+
+		review.save()
+
+	except TypeError:
+		pass
 
 
-def get_ip(request) -> str:
+def add_review(request, product) -> None:  # !
+	
+	try:
+		Reviews.objects.create(
+			text=request.POST.get('text'), 
+			product=product, user=request.user
+		)
+
+	except TypeError:
+		print('Попытка взлома!')
+
+
+def get_ip(request) -> str:  # !
 	'''возвращает ip пользователя'''
 	x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
 
@@ -33,33 +86,36 @@ def get_ip(request) -> str:
 		ip = request.META.get('REMOTE_ADDR')
 	return ip
 
-def change_wish_list_of_user(request, pk: int) -> None:
-	if Wish.objects.filter(item=pk):
-		Wish.objects.filter(item=pk).delete()
-	else:
-		wish = Wish.objects.create(user=request.user)
-		wish.item.add(pk)
+
+def change_wish_list_of_user(user, id: int) -> None:  # !
+	try:
+		wishes.filter(item=id).delete()
+
+	except ValueError:
+		wishes.create(user=user).item.add(id)
 
 
-def change_wish_list(request, pk: int) -> None:
-	if Wish.objects.filter(item=pk):
-		Wish.objects.filter(item=pk).delete()
-	else:
-		wish = Wish.objects.create(ip=get_ip(request))
-		wish.item.add(pk)				
+def change_wish_list_of_anonymous(request, id: int) -> None:  # !
+	try:
+		wishes.filter(item=id).delete()
+
+	except ValueError:
+		wishes.create(ip=get_ip(request)).item.add(id)				
 		
 
-def count_wishes(request) -> int:
-	if request.user.is_authenticated:
-		return len(Wish.objects.filter(user=request.user))
-	else:
-		return len(Wish.objects.filter(ip=get_ip(request)))
+def count_wishes(request) -> int:  # !
+	try:
+		return len(wishes.filter(user=request.user))
+
+	except TypeError:
+		return len(wishes.filter(ip=get_ip(request)))		
 
 
-def get_most_expensive_and_cheapest_price() -> list:
+def get_most_expensive_and_cheapest_price() -> list:  # !
 	'''Высчитывает самую большую и самую маленькую цены'''
 	most_expensive = 0
 	the_cheapest = 1000
+
 	for product in products:
 		price = product.price
 
@@ -76,7 +132,7 @@ def get_most_expensive_and_cheapest_price() -> list:
 
 
 def send_to_mail_message_from_user(email: str, 
-	name: str, message: str) -> None:
+	name: str, message: str) -> None:  # !
 	'''Отправляет сообщение пользователя админу'''
 	send_mail(email + ' - ' + name, 
 		message, 
@@ -84,7 +140,7 @@ def send_to_mail_message_from_user(email: str,
 	)
 
 
-def get_similar_products(product_obj) -> list:
+def get_similar_products(product_obj) -> list:  # !
 	similar_products = []
 
 	for product in products.filter(
@@ -95,5 +151,37 @@ def get_similar_products(product_obj) -> list:
 	return similar_products
 
 
-def get_object_product_from_int(id: int):
-	return Product.objects.get(id=id)
+def get_model_object_of_product(argument):  # !
+	try:
+		return Product.objects.get(id=argument)
+	except ValueError:
+		pass
+
+	try:
+		return products.filter(url=argument)[0]
+	except ValueError:
+		pass
+
+	
+def add_to_list(objects: list) -> list:  # !
+	feel_list = []
+	for obj in objects:
+		feel_list.append(obj.review)
+
+	return feel_list
+
+
+def add_to_like_list(request):   # !
+	try:
+		return add_to_list(Like.objects.filter(
+			user=request.user))		
+	except TypeError:
+		pass
+
+
+def add_to_dislike_list(request):  # !		
+	try:
+		return add_to_list(Dislike.objects.filter(
+			user=request.user))	
+	except TypeError:
+		pass

@@ -183,10 +183,9 @@
                                                 <ul class="product__item__pic__hover">
                                                     <li>
                                                         <a onclick="click_on_btn_for_heart('{{ product.id }}');"><i class="fa fa-heart"></i></a>
-                                                        <form action="{% url 'change_wish_list' %}" method="POST" style="display: none">
+                                                        <form action="{% url 'change_wish_list' product.id %}" method="POST" style="display: none">
                                                             {% csrf_token %}
-                                                            <input type="text" name="id" value="{{ product.id }}">
-                                                            <input type="text" name="back" value="{{ request.path }}">
+                                                            <input type="text" name="path" value="{{ request.path }}">
                                                             <button id="{{ product.id }}"></button>
                                                         </form>
                                                     </li>
@@ -238,10 +237,9 @@
                                     <ul class="product__item__pic__hover">
                                         <li>
                                             <a onclick="click_on_btn_for_heart('{{ product.id }}');"><i class="fa fa-heart"></i></a>
-                                            <form action="{% url 'change_wish_list' %}" method="POST" style="display: none">
+                                            <form action="{% url 'change_wish_list' product.id %}" method="POST" style="display: none">
                                                 {% csrf_token %}
-                                                <input type="text" name="id" value="{{ product.id }}">
-                                                <input type="text" name="back" value="{{ request.path }}">
+                                                <input type="text" name="path" value="{{ request.path }}">
                                                 <button id="{{ product.id }}"></button>
                                             </form>
                                         </li>
