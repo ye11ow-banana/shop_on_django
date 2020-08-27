@@ -1,6 +1,7 @@
 from .models import (
 	Product, Department, Advert, Wish, 
-	Color, Gallery, Reviews, Like, Dislike
+	Color, Gallery, Reviews, Like, Dislike,
+	RatingStar
 )
 from Shop.settings import EMAIL_HOST_USER
 from django.core.mail import send_mail
@@ -12,7 +13,7 @@ departments = Department.objects.all()
 advert = Advert.objects.all()[0]
 colors = Color.objects.all()
 galleries = Gallery.objects.all()
-reviews = Reviews.objects.all()
+reviews = Reviews.objects.all().order_by('-pub_date')
 wishes = Wish.objects.all()
 
 
@@ -64,16 +65,21 @@ def add_like(user, id: int) -> None:  # !
 		pass
 
 
-def add_review(request, product) -> None:  # !
-	
-	try:
-		Reviews.objects.create(
-			text=request.POST.get('text'), 
-			product=product, user=request.user
-		)
+def add_review(request, product, pk='') -> None:  # !
+	review = reviews.create(
+		text=request.POST.get('text'), 
+		product=product, user=request.user,
+	)
 
-	except TypeError:
-		print('Попытка взлома!')
+	if pk:
+		review.parent = reviews.filter(id=pk)[0]
+		review.save()
+
+
+def delete_review(id: int) -> None:
+	review = reviews.filter(id=id)[0]
+	reviews.filter(parent=review).delete()
+	review.delete()
 
 
 def get_ip(request) -> str:  # !
@@ -87,28 +93,38 @@ def get_ip(request) -> str:  # !
 	return ip
 
 
-def change_wish_list_of_user(user, id: int) -> None:  # !
+def change_wish_list(request, product) -> None:  # !
 	try:
-		wishes.filter(item=id).delete()
+		wishes.filter(item=product, user=request.user)[0].delete()
 
-	except ValueError:
-		wishes.create(user=user).item.add(id)
+	except IndexError:
+		wishes.create(user=request.user, item=product).save()
 
+	except TypeError: 
+		try:
+			wishes.filter(item=product, ip=get_ip(request))[0].delete()
 
-def change_wish_list_of_anonymous(request, id: int) -> None:  # !
-	try:
-		wishes.filter(item=id).delete()
-
-	except ValueError:
-		wishes.create(ip=get_ip(request)).item.add(id)				
+		except IndexError:
+			wishes.create(ip=get_ip(request), item=product).save()
 		
 
-def count_wishes(request) -> int:  # !
+def return_list_of_wish_products(objects) -> list:  # !
+	numbers_of_objects = []
+
+	for obj in objects:
+		numbers_of_objects.append(obj.item)
+
+	return numbers_of_objects	
+
+
+def wishes_of_user(request) -> list:  # !
 	try:
-		return len(wishes.filter(user=request.user))
+		return return_list_of_wish_products(
+			wishes.filter(user=request.user))
 
 	except TypeError:
-		return len(wishes.filter(ip=get_ip(request)))		
+		return return_list_of_wish_products(
+			wishes.filter(ip=get_ip(request)))
 
 
 def get_most_expensive_and_cheapest_price() -> list:  # !
@@ -163,7 +179,7 @@ def get_model_object_of_product(argument):  # !
 		pass
 
 	
-def add_to_list(objects: list) -> list:  # !
+def return_list_of_mark_reviews(objects: list) -> list:  # !
 	feel_list = []
 	for obj in objects:
 		feel_list.append(obj.review)
@@ -173,7 +189,7 @@ def add_to_list(objects: list) -> list:  # !
 
 def add_to_like_list(request):   # !
 	try:
-		return add_to_list(Like.objects.filter(
+		return return_list_of_mark_reviews(Like.objects.filter(
 			user=request.user))		
 	except TypeError:
 		pass
@@ -181,7 +197,21 @@ def add_to_like_list(request):   # !
 
 def add_to_dislike_list(request):  # !		
 	try:
-		return add_to_list(Dislike.objects.filter(
+		return return_list_of_mark_reviews(Dislike.objects.filter(
 			user=request.user))	
 	except TypeError:
 		pass
+
+
+def add_rating(user, product, stars_quantity):
+	rating_star = RatingStar.objects.all()
+	
+	rating_star.filter(
+		user=user, product=product
+	).delete()
+
+	rating_star.create(
+		user=user,
+		star=stars_quantity,
+		product=product
+	)

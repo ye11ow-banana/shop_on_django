@@ -73,6 +73,7 @@ class Reviews(models.Model):
     )
     product = models.ForeignKey(Product, verbose_name="продукт", on_delete=models.CASCADE)
     user = models.ForeignKey(User, verbose_name="пользователь", on_delete=models.CASCADE)
+    pub_date = models.DateTimeField('Дата публикации', auto_now_add=True)        
     quantity_of_likes = models.PositiveIntegerField(default=0, help_text="Начинается с 0", verbose_name="Число лайков")
     quantity_of_dislikes = models.PositiveIntegerField(default=0, help_text="Начинается с 0", verbose_name="Число дизлайков")
 
@@ -128,7 +129,7 @@ class Coupon(models.Model):
 class Wish(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
     ip = models.GenericIPAddressField(protocol='IPv4', blank=True, null=True)
-    item = models.ManyToManyField(Product)
+    item = models.ForeignKey(Product, on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = 'Список желаний'
@@ -143,3 +144,10 @@ class Like(models.Model):
 class Dislike(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     review = models.ForeignKey(Reviews, on_delete=models.CASCADE)
+
+
+class RatingStar(models.Model):
+    '''Звезда рейтинга'''
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='пользователь')
+    star = models.PositiveSmallIntegerField(verbose_name='количество звезд рейтинга')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='продукт')

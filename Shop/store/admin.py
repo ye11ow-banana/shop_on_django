@@ -1,5 +1,9 @@
 from django.contrib import admin
-from .models import Department, Color, Product, Gallery, Reviews, News, Advert, Coupon, Wish, Like, Dislike
+from .models import (
+    Department, Color, Product, Gallery, 
+    Reviews, News, Advert, Coupon, Wish, 
+    Like, Dislike, RatingStar
+)
 from django.utils.safestring import mark_safe
 from modeltranslation.admin import TranslationAdmin
 
@@ -112,6 +116,12 @@ class LikeAdmin(admin.ModelAdmin):
 class DislikeAdmin(admin.ModelAdmin):
     '''Цвет'''
     list_display = ('review', 'user', 'id')
+
+
+@admin.register(RatingStar)
+class RatingStarAdmin(admin.ModelAdmin):
+    '''Цвет'''
+    list_display = ('user', 'star', 'product')
 
 
 admin.site.site_title = 'Store'

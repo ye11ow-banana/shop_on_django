@@ -182,7 +182,11 @@
                                                 <div class="product__discount__percent">-{{ product.sale }}%</div>
                                                 <ul class="product__item__pic__hover">
                                                     <li>
-                                                        <a onclick="click_on_btn_for_heart('{{ product.id }}');"><i class="fa fa-heart"></i></a>
+                                                        {% if product in wishes_of_user %}
+                                                            <a onclick="click_on_btn_for_heart('{{ product.id }}');"><i class="fa fa-heart" style="color: red"></i></a>
+                                                        {% else %}
+                                                            <a onclick="click_on_btn_for_heart('{{ product.id }}');"><i class="fa fa-heart"></i></a>
+                                                        {% endif %}
                                                         <form action="{% url 'change_wish_list' product.id %}" method="POST" style="display: none">
                                                             {% csrf_token %}
                                                             <input type="text" name="path" value="{{ request.path }}">
@@ -236,7 +240,11 @@
                                 <div class="product__item__pic set-bg" data-setbg="{{ product.img.url }}" id="img_list">
                                     <ul class="product__item__pic__hover">
                                         <li>
-                                            <a onclick="click_on_btn_for_heart('{{ product.id }}');"><i class="fa fa-heart"></i></a>
+                                            {% if product in wishes_of_user %}
+                                                <a onclick="click_on_btn_for_heart('{{ product.id }}');"><i class="fa fa-heart" style="color: red"></i></a>
+                                            {% else %}
+                                                <a onclick="click_on_btn_for_heart('{{ product.id }}');"><i class="fa fa-heart"></i></a>
+                                            {% endif %}
                                             <form action="{% url 'change_wish_list' product.id %}" method="POST" style="display: none">
                                                 {% csrf_token %}
                                                 <input type="text" name="path" value="{{ request.path }}">

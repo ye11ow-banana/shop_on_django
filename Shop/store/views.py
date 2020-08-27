@@ -9,7 +9,8 @@ def main_page_view(request):
 			'products': services.products,
 			'departments': services.departments,
 			'advert': services.advert,
-			'quantity_of_hearts': services.count_wishes(request),
+			'quantity_of_hearts': len(services.wishes_of_user(request)),
+			'wishes_of_user': services.wishes_of_user(request),
 		})
 
 
@@ -22,11 +23,12 @@ def product_detail_view(request, product: str):
 			'product': product,
 			'departments': services.departments,
 			'photos': services.galleries.filter(product=product),
-			'quantity_of_hearts': services.count_wishes(request),	
+			'quantity_of_hearts': len(services.wishes_of_user(request)),	
 			'similar_products': services.get_similar_products(product),
 			'reviews': services.reviews.filter(product=product),
 			'liked': services.add_to_like_list(request),
 			'disliked': services.add_to_dislike_list(request),
+			'wishes_of_user': services.wishes_of_user(request),
 		})
 
 
@@ -44,6 +46,14 @@ def add_like_view(request, id: int):
 	return redirect(request.POST.get('path'))
 
 
+def add_answer_view(request, id: int, pk: int):
+	if request.method == 'POST':
+		services.add_review(request, 
+			services.get_model_object_of_product(id), pk)
+
+	return redirect(request.POST.get('path'))
+
+
 def add_review_view(request, id: int):
 	if request.method == 'POST':
 		services.add_review(request, 
@@ -54,7 +64,7 @@ def add_review_view(request, id: int):
 
 def remove_review_view(request, id: int):
 	if request.method == 'POST':
-		services.reviews.filter(id=id).delete()
+		services.delete_review(id)
 
 	return redirect(request.POST.get('path'))
 
@@ -63,6 +73,15 @@ def change_review_view(request, id: int):
 	if request.method == 'POST':
 		reviews = services.reviews.filter(id=id)[0]
 		reviews.text = request.POST.get('text')
+		reviews.save()
+
+	return redirect(request.POST.get('path'))
+
+
+def change_wish_list_view(request, id: int):
+	if request.method == 'POST':
+		services.change_wish_list(
+			request, services.get_model_object_of_product(id))
 
 	return redirect(request.POST.get('path'))
 
@@ -76,9 +95,10 @@ def shop_grid_view(request):
 				services.get_most_expensive_and_cheapest_price()[0],  # !
 			'the_cheapest_price': 
 				services.get_most_expensive_and_cheapest_price()[1],  # !
-			'quantity_of_hearts': services.count_wishes(request),
+			'quantity_of_hearts': len(services.wishes_of_user(request)),
 			'departments': services.departments,
 			'colors': services.colors,
+			'wishes_of_user': services.wishes_of_user(request),
 		})
 
 
@@ -92,26 +112,30 @@ def contact_view(request):
 
 	return render(request, 'contact.html', {
 		'departments': services.departments,
-		'quantity_of_hearts': services.count_wishes(request),
+		'quantity_of_hearts': len(services.wishes_of_user(request)),
+		'wishes_of_user': services.wishes_of_user(request),
 	})
 
 
 def social_networks_view(request):
 	'''Рендерит страницу о том, что нас 
 	пока нету в этот соц сети'''
-	return render(request, 'social_networks.html')
-
-
-def change_wish_list_view(request, id: int):
-	if request.method == 'POST':	
-		try:
-			services.change_wish_list_of_user(request.user, id)
-
-		except ValueError:
-			services.change_wish_list_of_anonymous(request, id)
-
-	return redirect(request.POST.get('path'))
+	return render(request, 'social_networks.html', {
+		'quantity_of_hearts': len(services.wishes_of_user(request)),
+	})
 
 
 def about_view(request):
 	return render(request, 'about.html')
+
+
+def add_rating_view(request):
+	if request.method == 'POST':
+		services.add_rating(
+			request.user,
+			services.get_model_object_of_product(
+				request.POST.get('product_id')),
+			request.POST.get('stars_quantity')		
+		)
+
+	return redirect(request.POST.get('path'))
