@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import (
     Department, Color, Product, Gallery, 
-    Reviews, News, Advert, Coupon, Wish, 
+    Review, News, Advert, Coupon, Wish, 
     Like, Dislike, RatingStar
 )
 from django.utils.safestring import mark_safe
@@ -15,8 +15,8 @@ class DepartmentAdmin(TranslationAdmin):
     list_display_links = ("name",)
 
 
-@admin.register(Reviews)
-class ReviewsAdmin(admin.ModelAdmin):
+@admin.register(Review)
+class ReviewAdmin(admin.ModelAdmin):
     '''Отзыв'''
     list_display = ('product', 'quantity_of_likes', 'parent', 'id')
 

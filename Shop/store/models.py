@@ -66,7 +66,7 @@ class Gallery(models.Model):
         verbose_name_plural = 'Галереи'
 
 
-class Reviews(models.Model):
+class Review(models.Model):
     text = models.TextField("Сообщение", max_length=5000)
     parent = models.ForeignKey(
         'self', verbose_name="Родитель", on_delete=models.SET_NULL, blank=True, null=True
