@@ -1,6 +1,6 @@
 from .models import (
 	Product, Department, Advert, Wish, 
-	Color, Gallery, Review, Like, Dislike,
+	Color, Gallery, Reviews, Like, Dislike,
 	RatingStar
 )
 from Shop.settings import EMAIL_HOST_USER
@@ -13,7 +13,7 @@ departments = Department.objects.all()
 advert = Advert.objects.all()[0]
 colors = Color.objects.all()
 galleries = Gallery.objects.all()
-reviews = Review.objects.all().order_by('-pub_date')
+reviews = Reviews.objects.all().order_by('-pub_date')
 wishes = Wish.objects.all()
 
 

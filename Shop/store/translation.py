@@ -1,5 +1,5 @@
 from modeltranslation.translator import register, TranslationOptions
-from .models import Department, Color, Product, Review, Advert, Coupon
+from .models import Department, Color, Product, Reviews, Advert, Coupon
 
 
 @register(Department)
