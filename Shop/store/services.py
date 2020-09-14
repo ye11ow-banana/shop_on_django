@@ -66,14 +66,16 @@ def add_like(user, id: int) -> None:  # !
 
 
 def add_review(request, product, pk='') -> None:  # !
-	review = reviews.create(
-		text=request.POST.get('text'), 
-		product=product, user=request.user,
-	)
-
-	if pk:
-		review.parent = reviews.filter(id=pk)[0]
-		review.save()
+    try:
+        review = reviews.create(
+            text=request.POST.get('text'), 
+            product=product, user=request.user,
+        )
+        if pk:
+            review.parent = reviews.filter(id=pk)[0]            
+            review.save()    
+    except ValueError:
+        pass
 
 
 def delete_review(id: int) -> None:

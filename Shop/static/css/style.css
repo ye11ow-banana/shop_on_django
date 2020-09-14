@@ -3836,3 +3836,23 @@ a {
 .pencil_answer:hover {
 	background-color: #4040D1;
 }
+
+#star_1:hover {
+	color: red;
+}
+
+#star_2:hover {
+	color: red;
+}
+
+#star_3:hover {
+	color: red;
+}
+
+#star_4:hover {
+	color: red;
+}
+
+#star_5:hover {
+	color: red;
+}

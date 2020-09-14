@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect 
 from . import services 
+from django.contrib.auth.models import User
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
 def main_page_view(request):
@@ -88,9 +90,21 @@ def change_wish_list_view(request, id: int):
 
 def shop_grid_view(request):
 	'''Рендерит страницу с товарами'''
+	page = request.GET.get('page', 1)
+
+	paginator = Paginator(services.products, 4)
+
+	try:
+		paginated_products = paginator.page(page)
+	except PageNotAnInteger:
+		paginated_products = paginator.page(1)
+	except EmptyPage:
+		paginated_products = paginator.page(paginator.num_pages)
+
 	return render(request, 'shop-grid.html', 
 		{
 			'products': services.products,
+			'paginated_products': paginated_products,
 			'most_expensive_price': 
 				services.get_most_expensive_and_cheapest_price()[0],  # !
 			'the_cheapest_price': 
